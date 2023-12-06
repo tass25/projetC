@@ -51,3 +51,27 @@ void saisir_livre(Livre *L) {
         printf("Erreur lors de l'ouverture du fichier.\n");
     }
 }
+
+
+//another function , another doumou3 , ekhtiyaraty mdamara hayaty :) 
+
+void Ajouter_Livre_list(Liste_Livre *l, Livre L) {
+    Noeud *nouveau = (Noeud *)malloc(sizeof(Noeud));
+    nouveau->valeur = L;
+    nouveau->suivant = NULL;
+
+    if (l->tete == NULL) {
+        l->tete = nouveau;
+    } else {
+        Noeud *current = l->tete;
+        while (current->suivant != NULL) {
+            current = current->suivant;
+        }
+        current->suivant = nouveau;
+    }
+}
+
+
+
+
+

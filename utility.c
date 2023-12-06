@@ -80,7 +80,7 @@ int validTitle(char *title) {
     while (fscanf(file, "%*[^,],%[^,],%*d,%*[^,],%*d\n", temp) == 1) {
         if (strcmp(temp, title) == 0) {
             fclose(file);
-            return 0; // Title already exists
+            return 0; // Title already exists 
         }
     }
     fclose(file);
