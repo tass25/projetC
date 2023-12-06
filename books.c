@@ -124,3 +124,34 @@ void Supprimer_Livre(Liste_Livre *l, int x) {
     fclose(file);
     fclose(tempFile);
 }
+Noeud *chercher_Liste(Liste_Livre l, int code) {
+    // First, try finding the book in the in-memory list
+    Noeud *current = l.tete;
+    while (current != NULL) {
+        if (current->valeur.Code == code) {
+            return current;  // Book found in the list
+        }
+        current = current->suivant;
+    }
+
+    // If not found in the list, check the books.txt file
+    FILE *file = fopen("books.txt", "r");
+    if (file == NULL) {
+        printf("Erreur lors de l'ouverture du fichier.\n");
+        return NULL;
+    }
+
+    Livre tempLivre;
+    while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
+        if (tempLivre.Code == code) {
+            fclose(file);
+            Noeud *newNode = malloc(sizeof(Noeud));
+            newNode->valeur = tempLivre;
+            newNode->suivant = NULL;
+            return newNode;  // Return a new node with the book details
+        }
+    }
+
+    fclose(file);
+    return NULL;  // Book not found in the file either
+}
