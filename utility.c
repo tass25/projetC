@@ -48,14 +48,14 @@ void password(){
 		}
 	}
 
-    fflush(stdin);
+    fflush(stdin);//clear the buffer
 
     // verifies the password 
     if(strcmp(code, pwd) == 0)
     {
         printf("\nCorrect Password!");
         Sleep(2000);
-        menu();
+        menu();//need implementation...................................................................................................................
     }
     else
     {

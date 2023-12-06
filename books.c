@@ -42,4 +42,12 @@ void saisir_livre(Livre *L) {
         printf("État invalide. Réessayez:\n");
         scanf("%d", &L->Etat);
     }
+    // Write the book to books.txt
+    FILE *file = fopen("books.txt", "a");
+    if (file != NULL) {
+        fprintf(file, "%d,%s,%s,%d,%d\n", L->Code, L->Titre, L->Auteur, L->Annee_Publication.annee, L->Etat);
+        fclose(file);
+    } else {
+        printf("Erreur lors de l'ouverture du fichier.\n");
+    }
 }
