@@ -71,7 +71,56 @@ void Ajouter_Livre_list(Liste_Livre *l, Livre L) {
     }
 }
 
+//tir flaynnnnn 
+void Supprimer_Livre(Liste_Livre *l, int x) {
+    Noeud *current = l->tete, *previous = NULL;
+    while (current != NULL && current->valeur.Code != x) {
+        previous = current;
+        current = current->suivant;
+    }
 
+    if (current == NULL) {
+        printf("Livre non trouvé.\n");
+        return;
+    }
 
+    if (previous == NULL) {
+        l->tete = current->suivant;
+    } else {
+        previous->suivant = current->suivant;
+    }
+    free(current);
 
+    // Use temp_books.txt for transaction
+    FILE *file = fopen("books.txt", "r");
+    FILE *tempFile = fopen("temp_books.txt", "w");
+    if (file == NULL || tempFile == NULL) {
+        printf("Erreur lors de l'ouverture du fichier.\n");
+        return;
+    }
 
+    Livre tempLivre;
+    while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
+        if (tempLivre.Code != x) {
+            fprintf(tempFile, "%d,%s,%s,%d,%d\n", tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, tempLivre.Annee_Publication.annee, tempLivre.Etat);
+        }
+    }
+
+    fclose(file);
+    fclose(tempFile);
+
+    // Now update books.txt from temp_books.txt
+    file = fopen("books.txt", "w");
+    tempFile = fopen("temp_books.txt", "r");
+    if (file == NULL || tempFile == NULL) {
+        printf("Erreur lors de la synchronisation des fichiers.\n");
+        return;
+    }
+
+    while (fscanf(tempFile, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
+        fprintf(file, "%d,%s,%s,%d,%d\n", tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, tempLivre.Annee_Publication.annee, tempLivre.Etat);
+    }
+
+    fclose(file);
+    fclose(tempFile);
+}
