@@ -155,3 +155,51 @@ Noeud *chercher_Liste(Liste_Livre l, int code) {
     fclose(file);
     return NULL;  // Book not found in the file either
 }
+
+int chercher_Livre_Dans_Fichier(Livre *L, int code) {
+    FILE *file = fopen("books.txt", "r");
+    if (file == NULL) {
+        printf("Erreur lors de l'ouverture du fichier.\n");
+        return 0;
+    }
+
+    int found = 0;
+    while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &L->Code, L->Titre, L->Auteur, &L->Annee_Publication.annee, &L->Etat) == 5) {
+        if (L->Code == code) {
+            found = 1;
+            break;
+        }
+    }
+
+    fclose(file);
+    return found;
+}
+void Afficher_Livre(int code) {
+    Livre L;
+    if (!chercher_Livre_Dans_Fichier(&L, code)) {
+        printf("Le livre avec le code %d n'a pas été trouvé.\n", code);
+        return;
+    }
+
+    printf("\nInformations sur le livre:\n");
+    printf("Code: %d\n", L.Code);
+    printf("Titre: %s\n", L.Titre);
+    printf("Auteur: %s\n", L.Auteur);
+    printf("Annee de Publication: %d\n", L.Annee_Publication.annee);
+    printf("Etat: ");
+
+    switch (L.Etat) {
+        case EMPRUNTE:
+            printf("Emprunte\n");
+            break;
+        case DISPONIBLE:
+            printf("Disponible\n");
+            break;
+        case EN_REPARATION:
+            printf("En Reparation\n");
+            break;
+        default:
+            printf("Etat Inconnu\n");
+            break;
+    }
+}
