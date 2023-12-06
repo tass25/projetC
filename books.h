@@ -1,12 +1,9 @@
-//
-// Created by labou on 06/12/2023.
-//
 
 #ifndef PROJET_C_BOOKS_H
 #define PROJET_C_BOOKS_H
 
 
-#include "utility.h"  // Include this if it contains common structures like Livre, Date, etc.
+#include "utility.h"
 
 void initialiser_liste_Livre(Liste_Livre *L);
 void saisir_livre(Livre *L);

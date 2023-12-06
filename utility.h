@@ -62,6 +62,6 @@ int validCode(int code);// ll code mtaa kol book
 int validName(char *name);// esm ll author 
 int validYear(int year) ;//year of publishing 
 int validState(int state);//state of livre
-
+void password();
 
 #endif //PROJET_C_UTILITY_H
