@@ -173,29 +173,35 @@ int chercher_Livre_Dans_Fichier(Livre *L, int code) {
     fclose(file);
     return found;
 }
-void Afficher_Livre(Livre L) {
-    printf("\nInformations sur le livre:\n");
-    printf("Code: %d\n", L.Code);
-    printf("Titre: %s\n", L.Titre);
-    printf("Auteur: %s\n", L.Auteur);
-    printf("Annee de Publication: %d\n", L.Annee_Publication.annee);
-    printf("Etat: ");
+void Afficher_Livre(int code) {
+    Livre L;
+    if (chercher_Livre_Dans_Fichier(&L, code)) {
+        printf("\nInformations sur le livre:\n");
+        printf("Code: %d\n", L.Code);
+        printf("Titre: %s\n", L.Titre);
+        printf("Auteur: %s\n", L.Auteur);
+        printf("Annee de Publication: %d\n", L.Annee_Publication.annee);
+        printf("Etat: ");
 
-    switch (L.Etat) {
-        case EMPRUNTE:
-            printf("Emprunte\n");
-            break;
-        case DISPONIBLE:
-            printf("Disponible\n");
-            break;
-        case EN_REPARATION:
-            printf("En Reparation\n");
-            break;
-        default:
-            printf("Etat Inconnu\n");
-            break;
+        switch (L.Etat) {
+            case EMPRUNTE:
+                printf("Emprunte\n");
+                break;
+            case DISPONIBLE:
+                printf("Disponible\n");
+                break;
+            case EN_REPARATION:
+                printf("En Reparation\n");
+                break;
+            default:
+                printf("Etat Inconnu\n");
+                break;
+        }
+    } else {
+        printf("Livre avec le code %d non trouvé dans le fichier.\n", code);
     }
 }
+
 
 //fseek : important 
 //fprintf : permet d'ecrire dans le file : fprintf(f,"expression",arg1,arg2....) eq tekho ml memoire w t7othom fl fichier 

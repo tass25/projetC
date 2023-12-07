@@ -9,7 +9,7 @@ void initialiser_liste_Livre(Liste_Livre *L);
 void saisir_livre(Livre *L);
 void Ajouter_Livre_list(Liste_Livre *l, Livre L);
 Noeud *chercher_Liste(Liste_Livre l, int code);
-void Afficher_Livre(Livre L);
+void Afficher_Livre(int code);
 int Chercher_Livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int x);
 Noeud *Recherche_livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code);
 void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int xx);
