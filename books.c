@@ -108,7 +108,6 @@ void Supprimer_Livre(Liste_Livre *l, int x) {
 
     fclose(file);
     fclose(tempFile);
-
     // Now update books.txt from temp_books.txt
     file = fopen("books.txt", "w");
     tempFile = fopen("temp_books.txt", "r");
@@ -174,13 +173,7 @@ int chercher_Livre_Dans_Fichier(Livre *L, int code) {
     fclose(file);
     return found;
 }
-void Afficher_Livre(int code) {
-    Livre L;
-    if (!chercher_Livre_Dans_Fichier(&L, code)) {
-        printf("Le livre avec le code %d n'a pas été trouvé.\n", code);
-        return;
-    }
-
+void Afficher_Livre(Livre L) {
     printf("\nInformations sur le livre:\n");
     printf("Code: %d\n", L.Code);
     printf("Titre: %s\n", L.Titre);
@@ -203,3 +196,12 @@ void Afficher_Livre(int code) {
             break;
     }
 }
+
+//fseek : important 
+//fprintf : permet d'ecrire dans le file : fprintf(f,"expression",arg1,arg2....) eq tekho ml memoire w t7othom fl fichier 
+//fscanf : bch nekho ml fichier w nakra fl variable taii eq nhotohom fl memoire   
+//c=fgetc (f) eq taa scanf : bch nakra char ml file  w nhot fl variable 
+//fputc(c,f) eq putchar(printf (%c,x)  => t7ot ll variable c fl file 
+//gets(s) eq de scanf("%s",s) 
+//fgets(s,taille, f)
+//

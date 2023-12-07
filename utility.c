@@ -1,70 +1,68 @@
 #include "utility.h"
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <string.h>
 #include <conio.h>  // For getch() and getche()
 #define ENTER 13
 #define TAB 9
 #define BKSP 8
 
-void password(){
-    int passTerminator = 1;
+void password() {
     system("cls");
     fflush(stdin);
 
+    char code[] = "tesnime";
     char pwd[255];
-    char code[255] = {"Alkaison"};
     int i = 0;
-	char ch;
+    int passTerminator = 1;
 
     printf("--------------------\n");
     printf(">>> Login First <<<\n");
     printf("--------------------\n\n");
 
-	printf("Enter your password. ENTERER to confirm. \n");
-	printf("Password:");
+    printf("Enter your password and press ENTER to confirm.\n");
+    printf("Password: ");
 
-	while(1)
-    {
+    while (1) {
+        char ch = getch();
 
-		ch = getch(); // get key
-
-		if(ch == ENTER || ch == TAB)
-        {
-			pwd[i] = '\0';
-			break;
-		}
-        else if(ch == BKSP)
-        { // Check if there are characters in the password
-			if(i > 0)
-            {
-				i--;// Move the cursor back, erase the last character, and decrement the counter
-				printf("\b \b"); 
-			}
-		}
-        else
-        {
-			pwd[i++] = ch;
-			printf("* \b");	
-		}
-	}
-
-    fflush(stdin);//clear the buffer
-
-    // verifies the password 
-    if(strcmp(code, pwd) == 0)
-    {
-        printf("\nCorrect Password!");
-        Sleep(2000);
-        menu();//need implementation...................................................................................................................
+        if (ch == '\r') {  // taa return 
+            pwd[i] = '\0';
+            break;
+        } else if (ch == '\b') {  // Backspace
+            if (i > 0) {
+                i--;
+                printf("\b \b");
+            }
+        } else {
+            if (i < 255 - 1) {
+                pwd[i++] = ch;
+                printf("*");
+            }
+        }
     }
-    else
-    {
-        printf("\nInvaild Password!");
-        (passTerminator == 3) ? exit(0) : passTerminator++;
+
+    fflush(stdin);
+
+    if (strcmp(code, pwd) == 0) {
+        printf("\nCorrect Password!\n");
         Sleep(2000);
-        password();
+        // menu eli mazel ma tkhdmch 
+    } else {
+        printf("\nInvalid Password!\n");
+        if (passTerminator ==3) {
+            printf("Maximum login attempts reached. Exiting...\n");
+            Sleep(2000);
+            exit(0);
+        } else {
+            passTerminator++;
+            Sleep(2000);
+            password();
+        }
     }
 }
+
+
 
 int validTitle(char *title) {
     if (strlen(title) == 0 || strlen(title) >= TAILLE_CHAINE) {
@@ -127,3 +125,11 @@ int validState(int state) {
     return 0; 
 }
 
+int main() {
+    password();
+    
+}
+
+
+//etude de cas(contextuealisation ) 
+//les fonctionalités
