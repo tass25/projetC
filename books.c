@@ -203,6 +203,11 @@ void Afficher_Livre(int code) {
 }
 
 
+
+
+
+
+
 //fseek : important 
 //fprintf : permet d'ecrire dans le file : fprintf(f,"expression",arg1,arg2....) eq tekho ml memoire w t7othom fl fichier 
 //fscanf : bch nekho ml fichier w nakra fl variable taii eq nhotohom fl memoire   
