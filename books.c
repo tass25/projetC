@@ -378,6 +378,27 @@ void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre
     }
 }
 
+void remplire_liste_Disponible(Liste_Livre *Disponible, int n) {
+    int i;
+    Livre L;
+
+    // No need to set Disponible->tete = NULL here to preserve existing list contents
+
+    for (i = 0; i < n; i++) {
+        printf(" Saisie du Livre /%d/\n", i + 1);
+
+        // Get book details from user
+        saisir_livre(&L);
+
+        // Check if a book with the same code already exists in the list
+        if (chercher_Liste(*Disponible, L.Code) == NULL) {
+            // Add the book to the list if it doesn't exist
+            Ajouter_Livre_list(Disponible, L);
+        } else {
+            printf("Un livre avec le code %d existe déjà.\n", L.Code);
+        }
+    }
+}
 
 
 
