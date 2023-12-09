@@ -7,61 +7,79 @@
 #define TAB 9
 #define BKSP 8
 
-void password() {
-    system("cls");
-    fflush(stdin);
+#define MAX_PASSWORD_LENGTH 20   // Define maximum password length
+#define MAX_ATTEMPTS 3           // Define maximum login attempts
 
-    char code[] = "tesnime";
-    char pwd[255];
-    int i = 0;
-    int passTerminator = 1;
+// Function to clear the screen
+void clearScreen() {
+    system("cls");
+}
+
+// Placeholder for root menu functionality
+void rootMenu() {
+    // Root menu implementation
+}
+
+// Placeholder for user menu functionality
+void userMenu() {
+    // User menu implementation
+}
+
+// Function for handling password entry and verification
+void password() {
+    clearScreen();
+    fflush(stdin);  // Clear the input buffer
+
+    char code[] = "tesnime";  // Default password
+    char pwd[MAX_PASSWORD_LENGTH];  // Buffer for user-entered password
+    int attemptCount = 0;  // Count of login attempts
 
     printf("--------------------\n");
     printf(">>> Login First <<<\n");
     printf("--------------------\n\n");
 
-    printf("Enter your password and press ENTER to confirm.\n");
-    printf("Password: ");
+    while (attemptCount < MAX_ATTEMPTS) {
+        int i = 0;
+        printf("Enter your password and press ENTER to confirm.\n");
+        printf("Password: ");
 
-    while (1) {
-        char ch = getch();
-
-        if (ch == '\r') {  // taa return 
-            pwd[i] = '\0';
-            break;
-        } else if (ch == '\b') {  // Backspace
-            if (i > 0) {
+        while (1) {
+            char ch = getch();  // Get character without echoing it
+            if (ch == '\r' && i > 0) {  // Enter key pressed and at least one character entered
+                pwd[i] = '\0';  // Null terminate the string
+                break;
+            } else if (ch == '\b' && i > 0) {  // Backspace pressed and there are characters to erase
                 i--;
-                printf("\b \b");
+                printf("\b \b");  // Erase the last character on the console
+            } else if (ch >= 32 && ch <= 126 && i < MAX_PASSWORD_LENGTH - 1) {  // Printable character entered and buffer not full
+                pwd[i++] = ch;  // Store character in the password buffer
+                printf("*");  // Print an asterisk for each character entered
             }
+        }
+
+        fflush(stdin);  // Clear the input buffer after password entry
+
+        if (strcmp(code, pwd) == 0) {  // Check if entered password matches the default password
+            printf("\nCorrect Password!\n");
+            Sleep(2000);  // Wait for 2 seconds
+            rootMenu();  // Enter the root menu
+            return;
         } else {
-            if (i < 255 - 1) {
-                pwd[i++] = ch;
-                printf("*");
+            printf("\nInvalid Password!\n");
+            attemptCount++;  // Increment the attempt count
+            if (attemptCount == MAX_ATTEMPTS) {  // Check if maximum attempts are reached
+                printf("Maximum login attempts reached. Exiting...\n");
+                Sleep(2000);  // Wait for 2 seconds before exiting
+                exit(0);  // Exit the program
+            } else {
+                Sleep(2000);  // Wait for 2 seconds before next attempt
+                clearScreen();  // Clear the screen for next attempt
             }
         }
     }
 
-    fflush(stdin);
-
-    if (strcmp(code, pwd) == 0) {
-        printf("\nCorrect Password!\n");
-        Sleep(2000);
-        // menu eli mazel ma tkhdmch 
-    } else {
-        printf("\nInvalid Password!\n");
-        if (passTerminator ==3) {
-            printf("Maximum login attempts reached. Exiting...\n");
-            Sleep(2000);
-            exit(0);
-        } else {
-            passTerminator++;
-            Sleep(2000);
-            password();
-        }
-    }
+    userMenu();  // Enter the user menu if maximum attempts not reached
 }
-
 
 
 int validTitle(char *title) {
