@@ -1,84 +1,70 @@
 #include "utility.h"
 #include <stdio.h>
-#include <stdlib.h>
+#include <conio.h>
 #include <string.h>
-#include <conio.h>  // For getch() and getche()
-#define ENTER 13
+#include <time.h>
+#include <stdlib.h>
+#include <windows.h>
+
 #define TAB 9
+
+#define ENTER 13
 #define BKSP 8
-
 #define MAX_PASSWORD_LENGTH 20   // Define maximum password length
-#define MAX_ATTEMPTS 3           // Define maximum login attempts
 
-// Function to clear the screen
-void clearScreen() {
-    system("cls");
+void menu() {
+    printf("Welcome to the main menu.\n");
 }
 
-// Placeholder for root menu functionality
-void rootMenu() {
-    // Root menu implementation
+void menu2() {
+    printf("Welcome to the secondary menu.\n");
 }
 
-// Placeholder for user menu functionality
-void userMenu() {
-    // User menu implementation
-}
-
-// Function for handling password entry and verification
 void password() {
-    clearScreen();
-    fflush(stdin);  // Clear the input buffer
+    system("cls");
+    fflush(stdin);
 
-    char code[] = "tesnime";  // Default password
-    char pwd[MAX_PASSWORD_LENGTH];  // Buffer for user-entered password
-    int attemptCount = 0;  // Count of login attempts
+    char pwd[255];
+    char code[255] = {"Alkaison"};
+    int i = 0;
+    char ch;
 
     printf("--------------------\n");
     printf(">>> Login First <<<\n");
     printf("--------------------\n\n");
 
-    while (attemptCount < MAX_ATTEMPTS) {
-        int i = 0;
-        printf("Enter your password and press ENTER to confirm.\n");
-        printf("Password: ");
+    printf("Enter your password. Hit ENTER to confirm.\n");
+    printf("Password:");
 
-        while (1) {
-            char ch = getch();  // Get character without echoing it
-            if (ch == '\r' && i > 0) {  // Enter key pressed and at least one character entered
-                pwd[i] = '\0';  // Null terminate the string
-                break;
-            } else if (ch == '\b' && i > 0) {  // Backspace pressed and there are characters to erase
+    while (1) {
+        ch = getch(); // get key
+
+        if (ch == ENTER || ch == TAB) {
+            pwd[i] = '\0';
+            break;
+        } else if (ch == BKSP) {
+            if (i > 0) {
                 i--;
-                printf("\b \b");  // Erase the last character on the console
-            } else if (ch >= 32 && ch <= 126 && i < MAX_PASSWORD_LENGTH - 1) {  // Printable character entered and buffer not full
-                pwd[i++] = ch;  // Store character in the password buffer
-                printf("*");  // Print an asterisk for each character entered
+                printf("\b \b"); // for backspace
             }
-        }
-
-        fflush(stdin);  // Clear the input buffer after password entry
-
-        if (strcmp(code, pwd) == 0) {  // Check if entered password matches the default password
-            printf("\nCorrect Password!\n");
-            Sleep(2000);  // Wait for 2 seconds
-            rootMenu();  // Enter the root menu
-            return;
         } else {
-            printf("\nInvalid Password!\n");
-            attemptCount++;  // Increment the attempt count
-            if (attemptCount == MAX_ATTEMPTS) {  // Check if maximum attempts are reached
-                printf("Maximum login attempts reached. Exiting...\n");
-                Sleep(2000);  // Wait for 2 seconds before exiting
-                exit(0);  // Exit the program
-            } else {
-                Sleep(2000);  // Wait for 2 seconds before next attempt
-                clearScreen();  // Clear the screen for next attempt
-            }
+            pwd[i++] = ch;
+            printf("* \b"); // to replace password character with *
         }
     }
 
-    userMenu();  // Enter the user menu if maximum attempts not reached
+    fflush(stdin);
+
+    // Verifies the password
+    if (strcmp(code, pwd) == 0) {
+        printf("\nCorrect Password!\n");
+        Sleep(2000);
+        menu(); // Enter the root menu if the password is correct
+    } else {
+        printf("\nInvalid Password!\n");
+        Sleep(2000);
+        menu2(); // Enter the user menu if the password is incorrect
+    }
 }
 
 
@@ -143,9 +129,9 @@ int validState(int state) {
     return 0; 
 }
 
-int main() {
+void main() {
     password();
-    
+
 }
 
 //mazel user menu w root menu 
