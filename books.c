@@ -400,6 +400,64 @@ void remplire_liste_Disponible(Liste_Livre *Disponible, int n) {
     }
 }
 
+void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int anne) {
+    Noeud *current;
+    int count;
+
+    // Display available books from the specified year
+    current = Disponible.tete;
+    count = 1;
+    printf("La Liste Des Livres Disponibles Parus A L'Annee %d Est :\n", anne);
+    if (current == NULL) {
+        printf("\t----La Liste Est Vide !!!---\n");
+    } else {
+        while (current != NULL) {
+            if (current->valeur.Annee_Publication.annee == anne) {
+                printf("Le Livre Num /%d/ :\n", count);
+                Afficher_Livre(current->valeur.Code); // Call Afficher_Livre with the book code
+                count++;
+            }
+            current = current->suivant;
+        }
+    }
+    printf("\n");
+
+    // Display borrowed books from the specified year
+    current = Emprunte.tete;
+    count = 1;
+    printf("La Liste Des Livres Empruntes Parus A L'Annee %d Est :\n", anne);
+    if (current == NULL) {
+        printf("\t----La Liste Est Vide !!!---\n");
+    } else {
+        while (current != NULL) {
+            if (current->valeur.Annee_Publication.annee == anne) {
+                printf("Le Livre Num /%d/ :\n", count);
+                Afficher_Livre(current->valeur.Code);
+                count++;
+            }
+            current = current->suivant;
+        }
+    }
+    printf("\n");
+
+    // Display books under repair from the specified year
+    current = En_Reparation.tete;
+    count = 1;
+    printf("La Liste Des Livres En Reparation Parus A L'Annee /%d/ Est :\n\n", anne);
+    if (current == NULL) {
+        printf("\t----La Liste Est Vide !!!---\n");
+    } else {
+        while (current != NULL) {
+            if (current->valeur.Annee_Publication.annee == anne) {
+                printf("Le Livre Num /%d/ :\n", count);
+                Afficher_Livre(current->valeur.Code);
+                count++;
+            }
+            current = current->suivant;
+        }
+    }
+    printf("\n");
+}
 
 
 
