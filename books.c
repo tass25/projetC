@@ -1,7 +1,7 @@
 #include "books.h"
 #include <stdio.h>
-#include<stdlib.h>
-    
+#include <stdlib.h>
+#define  TAILLE_CHAINE 255 
 
 //l'initialisation d'une liste des livres
 void initialiser_liste_Livre(Liste_Livre*L)
@@ -254,6 +254,99 @@ void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *Emprunte, 
         printf("Book with code %d not found.\n", code);
     }
 }
+
+void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code) {
+    Noeud *bookNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, code);
+
+    if (bookNode != NULL) {
+        char newTitle[TAILLE_CHAINE];  // Assuming TAILLE_CHAINE is a defined constant for max title length
+        printf("Enter new title: ");
+        scanf("%s", newTitle);  // Consider using fgets for safer string input
+
+        // Update the title
+        strcpy(bookNode->valeur.Titre, newTitle);
+        printf("Title updated successfully.\n");
+    } else {
+        printf("Book with code %d not found.\n", code);
+    }
+}
+
+void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code) {
+    Noeud *bookNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, code);
+
+    if (bookNode != NULL) {
+        char newAuthor[TAILLE_CHAINE];  // Assuming TAILLE_CHAINE is a defined constant for max author name length
+        printf("Enter new author name: ");
+        scanf("%s", newAuthor);  // Consider using fgets for safer string input
+
+        // Update the author
+        strcpy(bookNode->valeur.Auteur, newAuthor);
+        printf("Author updated successfully.\n");
+    } else {
+        printf("Book with code %d not found.\n", code);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
