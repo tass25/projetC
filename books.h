@@ -11,7 +11,7 @@ void Ajouter_Livre_list(Liste_Livre *l, Livre L);     //done
 Noeud *chercher_Liste(Liste_Livre l, int code);      //done
 void Afficher_Livre(int code);                      // done
 int chercher_Livre_Dans_Fichier(Livre *L, int code); //done
-int Chercher_Livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int x);
+int Chercher_Livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code);//done
 Noeud *Recherche_livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code);
 void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int xx);
 void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int xx);

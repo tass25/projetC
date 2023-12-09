@@ -202,6 +202,85 @@ void Afficher_Livre(int code) {
     }
 }
 
+int Chercher_Livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code) {
+    // Search in Disponible
+    if (chercher_Liste(Disponible, code) != NULL) return 1; // Found in Available
+    
+    // Search in Emprunte
+    if (chercher_Liste(Emprunte, code) != NULL) return 2; // Found in Borrowed
+    
+    // Search in En_Reparation
+    if (chercher_Liste(En_Reparation, code) != NULL) return 3; // Found in Under Repair
+    
+    return 0; // Not found
+}
+
+
+Noeud *Recherche_livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code) {
+    Noeud *foundNode;
+
+    // Search in the 'Disponible' list
+    foundNode = chercher_Liste(Disponible, code);
+    if (foundNode != NULL) return foundNode; // Book found in the available list
+
+    // Search in the 'Emprunte' list
+    foundNode = chercher_Liste(Emprunte, code);
+    if (foundNode != NULL) return foundNode; // Book found in the borrowed list
+
+    // Search in the 'En_Reparation' list
+    foundNode = chercher_Liste(En_Reparation, code);
+    return foundNode; // Return the found node or NULL if not found in any list
+}
+
+void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code) {
+    // Use Recherche_livre to find the book in any of the lists
+    Noeud *bookNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, code);
+
+    // Check if the book was found
+    if (bookNode != NULL) {
+        int newYear;
+        printf("Enter new publication year: ");
+        scanf("%d", &newYear);
+
+        // Validate the new year (assuming validYear function exists in utility.c)
+        if (validYear(newYear)) {
+            // Update the year
+            bookNode->valeur.Annee_Publication.annee = newYear;
+            printf("Publication year updated successfully.\n");
+        } else {
+            printf("Invalid year.\n");
+        }
+    } else {
+        printf("Book with code %d not found.\n", code);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
