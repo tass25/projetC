@@ -233,67 +233,150 @@ Noeud *Recherche_livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre
 }
 
 void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code) {
-    // Use Recherche_livre to find the book in any of the lists
+    // Search for the book in the lists
     Noeud *bookNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, code);
 
-    // Check if the book was found
-    if (bookNode != NULL) {
+    // Open the original and temporary files
+    FILE *file = fopen("books.txt", "r");
+    FILE *tempFile = fopen("temp_books.txt", "w");
+    Livre tempLivre;
+
+    // Check if the book was found and if files are opened successfully
+    if (bookNode != NULL && file != NULL && tempFile != NULL) {
         int newYear;
         printf("Enter new publication year: ");
-        scanf("%d", &newYear);
+        scanf("%d", &newYear);  // Get new publication year from user
 
-        // Validate the new year (assuming validYear function exists in utility.c)
-        if (validYear(newYear)) {
-            // Update the year
-            bookNode->valeur.Annee_Publication.annee = newYear;
-            printf("Publication year updated successfully.\n");
-        } else {
-            printf("Invalid year.\n");
+        // Read from "books.txt" and write to "temp_books.txt"
+        while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
+            // Check if the current book is the one to update
+            if (tempLivre.Code == code && validYear(newYear)) {
+                tempLivre.Annee_Publication.annee = newYear;  // Update the publication year
+            }
+            // Write the (updated) book information to the temporary file
+            fprintf(tempFile, "%d,%s,%s,%d,%d\n", tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, tempLivre.Annee_Publication.annee, tempLivre.Etat);
         }
+
+        // Close both files after reading and writing
+        fclose(file);
+        fclose(tempFile);
+
+        // Now copy the contents of the updated temporary file back to the original file
+        file = fopen("books.txt", "w");
+        tempFile = fopen("temp_books.txt", "r");
+        char ch;
+        while ((ch = fgetc(tempFile)) != EOF) {
+            fputc(ch, file);  // Copy character by character
+        }
+        // Close the files after copying
+        fclose(file);
+        fclose(tempFile);
+        printf("Publication year updated successfully.\n");
     } else {
-        printf("Book with code %d not found.\n", code);
+        // Error handling if book not found or file operation failed
+        printf("Error updating publication year.\n");
+        if (file) fclose(file);
+        if (tempFile) fclose(tempFile);
     }
 }
 
 void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code) {
+    // Search for the book in the lists
     Noeud *bookNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, code);
 
-    if (bookNode != NULL) {
-        char newTitle[TAILLE_CHAINE];  // Assuming TAILLE_CHAINE is a defined constant for max title length
-        printf("Enter new title: ");
-        scanf("%s", newTitle);  // Consider using fgets for safer string input
+    // Open the original and temporary files
+    FILE *file = fopen("books.txt", "r");
+    FILE *tempFile = fopen("temp_books.txt", "w");
+    Livre tempLivre;
 
-        // Update the title
-        strcpy(bookNode->valeur.Titre, newTitle);
+    // Check if the book was found and if files are opened successfully
+    if (bookNode != NULL && file != NULL && tempFile != NULL) {
+        char newTitle[TAILLE_CHAINE];
+        printf("Enter new title: ");
+        scanf("%s", newTitle);  // Get new title from user
+
+        // Read from "books.txt" and write to "temp_books.txt"
+        while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
+            // Check if the current book is the one to update
+            if (tempLivre.Code == code) {
+                strcpy(tempLivre.Titre, newTitle);  // Update the title
+            }
+            // Write the (updated) book information to the temporary file
+            fprintf(tempFile, "%d,%s,%s,%d,%d\n", tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, tempLivre.Annee_Publication.annee, tempLivre.Etat);
+        }
+
+        // Close both files after reading and writing
+        fclose(file);
+        fclose(tempFile);
+
+        // Now copy the contents of the updated temporary file back to the original file
+        file = fopen("books.txt", "w");
+        tempFile = fopen("temp_books.txt", "r");
+        char ch;
+        while ((ch = fgetc(tempFile)) != EOF) {
+            fputc(ch, file);  // Copy character by character
+        }
+        // Close the files after copying
+        fclose(file);
+        fclose(tempFile);
         printf("Title updated successfully.\n");
     } else {
-        printf("Book with code %d not found.\n", code);
+        // Error handling if book not found or file operation failed
+        printf("Error updating title.\n");
+        if (file) fclose(file);
+        if (tempFile) fclose(tempFile);
     }
 }
+
+
 
 void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code) {
+    // Search for the book in the lists
     Noeud *bookNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, code);
 
-    if (bookNode != NULL) {
-        char newAuthor[TAILLE_CHAINE];  // Assuming TAILLE_CHAINE is a defined constant for max author name length
-        printf("Enter new author name: ");
-        scanf("%s", newAuthor);  // Consider using fgets for safer string input
+    // Open the original and temporary files
+    FILE *file = fopen("books.txt", "r");
+    FILE *tempFile = fopen("temp_books.txt", "w");
+    Livre tempLivre;
 
-        // Update the author
-        strcpy(bookNode->valeur.Auteur, newAuthor);
+    // Check if the book was found and if files are opened successfully
+    if (bookNode != NULL && file != NULL && tempFile != NULL) {
+        char newAuthor[TAILLE_CHAINE];
+        printf("Enter new author name: ");
+        scanf("%s", newAuthor);  // Get new author name from user
+
+        // Read from "books.txt" and write to "temp_books.txt"
+        while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
+            // Check if the current book is the one to update
+            if (tempLivre.Code == code) {
+                strcpy(tempLivre.Auteur, newAuthor);  // Update the author
+            }
+            // Write the (updated) book information to the temporary file
+            fprintf(tempFile, "%d,%s,%s,%d,%d\n", tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, tempLivre.Annee_Publication.annee, tempLivre.Etat);
+        }
+
+        // Close both files after reading and writing
+        fclose(file);
+        fclose(tempFile);
+
+        // Now copy the contents of the updated temporary file back to the original file
+        file = fopen("books.txt", "w");
+        tempFile = fopen("temp_books.txt", "r");
+        char ch;
+        while ((ch = fgetc(tempFile)) != EOF) {
+            fputc(ch, file);  // Copy character by character
+        }
+        // Close the files after copying
+        fclose(file);
+        fclose(tempFile);
         printf("Author updated successfully.\n");
     } else {
-        printf("Book with code %d not found.\n", code);
+        // Error handling if book not found or file operation failed
+        printf("Error updating author.\n");
+        if (file) fclose(file);
+        if (tempFile) fclose(tempFile);
     }
 }
-
-
-
-
-
-
-
-
 
 
 
