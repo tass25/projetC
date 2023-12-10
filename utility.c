@@ -12,58 +12,60 @@
 #define BKSP 8
 #define MAX_PASSWORD_LENGTH 20   // Define maximum password length
 
-void menu() {
-    printf("Welcome to the main menu.\n");
+void rootMenu() {
+    // Placeholder function for the root menu functionality
+    printf("Welcome to Root Menu\n");
 }
 
-void menu2() {
-    printf("Welcome to the secondary menu.\n");
+void userMenu() {
+    // Placeholder function for the user menu functionality
+    printf("Welcome to User Menu\n");
 }
 
-void password() {
-    system("cls");
-    fflush(stdin);
+void password(int x, int y) {
+    int i = 0, attempts = 0;  // Initialize counter for password characters and attempts
+    const int maxAttempts = 2;  // Maximum allowed attempts
+    char ch, pass[15], t[17] = "Enter Password: ";  // Password input buffer and prompt text
 
-    char pwd[255];
-    char code[255] = {"Alkaison"};
-    int i = 0;
-    char ch;
-
-    printf("--------------------\n");
-    printf(">>> Login First <<<\n");
-    printf("--------------------\n\n");
-
-    printf("Enter your password. Hit ENTER to confirm.\n");
-    printf("Password:");
-
-    while (1) {
-        ch = getch(); // get key
-
-        if (ch == ENTER || ch == TAB) {
-            pwd[i] = '\0';
-            break;
-        } else if (ch == BKSP) {
-            if (i > 0) {
-                i--;
-                printf("\b \b"); // for backspace
+    while (attempts < maxAttempts) {  // Loop until maximum attempts are reached
+        i = 0;  // Reset the password character counter for each attempt
+        gotoxy(x, y);  // Position the cursor using gotoxy function
+        printf("%s", t);  // Display the password prompt
+        while (1) {  // Infinite loop to capture password input
+            ch = getch();  // Get a character without echoing it
+            if (ch == BKSP) {  // Check if backspace is pressed
+                if (i > 0) {  // Check if there are characters to erase
+                    i--;  // Decrease character count
+                    printf("\b \b");  // Erase a character from console
+                }
+            } else if (ch == ENTER) {  // Check if enter key is pressed
+                pass[i] = '\0';  // Null-terminate the password string
+                break;  // Exit the password input loop
+            } else if (i < 14) {  // Check for password length limit (excluding null terminator)
+                pass[i] = ch;  // Store the character in password buffer
+                printf("*");  // Print an asterisk for each character entered
+                i++;  // Increment character count
             }
-        } else {
-            pwd[i++] = ch;
-            printf("* \b"); // to replace password character with *
         }
-    }
 
-    fflush(stdin);
-
-    // Verifies the password
-    if (strcmp(code, pwd) == 0) {
-        printf("\nCorrect Password!\n");
-        Sleep(2000);
-        menu(); // Enter the root menu if the password is correct
-    } else {
-        printf("\nInvalid Password!\n");
-        Sleep(2000);
-        menu2(); // Enter the user menu if the password is incorrect
+        // Check if entered password matches the predefined password
+        if (strcmp(pass, "Developer-dk") == 0) {
+            system("color A");  // Change console color to indicate correct password
+            printf("\nCorrect Password\n");
+            rootMenu();  // Call the root menu function
+            return;  // Exit the password function
+        } else {
+            system("color 4");  // Change console color to indicate incorrect password
+            printf("\nIncorrect Password. ");
+            attempts++;  // Increment the attempt counter
+            if (attempts < maxAttempts) {
+                printf("Try again...\n");  // Prompt to try again if attempts are left
+            } else {
+                printf("Redirecting to User Menu...\n");  // Inform about redirection
+                userMenu();  // Call the user menu function
+                return;  // Exit the password function
+            }
+        }
     }
 }
 
@@ -130,6 +132,7 @@ int validState(int state) {
 }
 
 void main() {
+    system("color 9");
     password();
 
 }
