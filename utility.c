@@ -11,6 +11,13 @@
 #define ENTER 13
 #define BKSP 8
 #define MAX_PASSWORD_LENGTH 20   // Define maximum password length
+void gotoxy(int x,int y)
+{
+    COORD c;
+    c.X=x;
+    c.Y=y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
+}
 
 void rootMenu() {
     // Placeholder function for the root menu functionality
@@ -49,7 +56,7 @@ void password(int x, int y) {
         }
 
         // Check if entered password matches the predefined password
-        if (strcmp(pass, "Developer-dk") == 0) {
+        if (strcmp(pass, "tesnime") == 0) {
             system("color A");  // Change console color to indicate correct password
             printf("\nCorrect Password\n");
             rootMenu();  // Call the root menu function
@@ -131,9 +138,103 @@ int validState(int state) {
     return 0; 
 }
 
+void delay(int mseconds)
+{
+    clock_t target=clock();
+    while(clock()<target+mseconds);
+}
+
+void splash_s(int x, int y, int l, int h)
+{
+    for (int i = 0; i < h; i++)
+    {
+        gotoxy(x, y + i);
+        printf("\xDB");
+        delay(5);
+    }
+    for (int i = 0; i < l - 2; i++)
+    {
+        printf("\xDB");
+        delay(3);
+    }
+    for (int i = y + h; i > y; i--)
+    {
+        gotoxy(x + l - 1, i - 1);
+        printf("\xDB");
+        delay(5);
+    }
+    for (int i = x + l - 2; i > x; i--)
+    {
+        gotoxy(i, y);
+        printf("\xDB");
+        delay(3);
+    }
+    char a[11] = "Welcome to";
+    gotoxy(55, 9);
+    for (int i = 0; i < 10; i++)
+    {
+        printf("%c", a[i]);
+        delay(8);
+    }
+    char b[27] = "tayyyyyyyyyyyyyyyyyyyyyy";
+    gotoxy(47, 11);
+    for (int i = 0; i < 26; i++)
+    {
+        printf("%c", b[i]);
+        delay(8);
+    }
+}
+void box(int a, int c,int l,int h)
+{
+    gotoxy(a,c);
+    printf("%c",218);
+    for (int i = 0; i < l; i++)
+    {
+        printf("%c",196);
+    }
+    printf("%c\n",191);
+
+    for (int i = 0,y=c+1; i < h; i++,y++)
+    {
+        gotoxy(a,y);
+        printf("%c",179);
+        gotoxy(a+l+1,y);
+        printf("%c",179);
+    }
+    gotoxy(a,c+h);
+    printf("%c",192);
+    for (int i = 0; i < l; i++)
+    {
+        printf("%c",196);
+    }
+    printf("%c\n",217);
+}
+
+void loader(int x,int y,int z)
+{
+    box(x,y,z,2);
+    gotoxy(x+z/2-3,y-1);
+    //gotoxy(x-+40,y-1);       dont know how but it prints at good location, must try
+    printf("Loading...");
+    //gotoxy(x+1,y+1);
+    float j = 100.00/z;
+    for (int i = 1; i <= z; i++,j+=100.00/z)
+    {
+        gotoxy(x+i,y+1);
+        printf("\xDB");
+        gotoxy(x+z+5,y+1);
+        printf("%2d%%",(int)j);
+        delay(10);
+    }
+    gotoxy(x+3,y+3);
+}
+
 void main() {
+    system("cls");
     system("color 9");
+    splash_s(24, 5, 71, 20);
     password(30,15);
+    loader(29, 20, 54);
 
 }
 
