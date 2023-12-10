@@ -133,7 +133,7 @@ int validState(int state) {
 
 void main() {
     system("color 9");
-    password();
+    password(30,15);
 
 }
 
