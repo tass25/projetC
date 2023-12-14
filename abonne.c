@@ -186,6 +186,102 @@ void Rendre_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprun
     // Save changes to the files
     sauvegarderEtatDesLivres(Disponible, Emprunte, En_Reparation);
 }
+#include <stdio.h>
+#include <stdlib.h>
+#include "utility.c"  // Assuming utility.c contains all the necessary definitions and functions
+
+int main() {
+    // Initializations
+    Liste_Abonne listeAbonnes;
+    Liste_Livre listeDisponible;
+    Liste_Livre listeEmprunte;
+    Liste_Livre listeEnReparation;
+    
+    initialiser_liste_abonne(&listeAbonnes);
+    initialiser_liste_Livre(&listeDisponible);  // Assuming this function is defined similarly for books
+    initialiser_liste_Livre(&listeEmprunte);
+    initialiser_liste_Livre(&listeEnReparation);
+    
+    // Load data from files if you have implemented file loading functions
+    // chargerAbonnesDepuisFichier(&listeAbonnes);
+    // chargerLivresDepuisFichier(&listeDisponible, &listeEmprunte, &listeEnReparation);
+
+    int choix, identifiant, codeLivre;
+    
+    while (1) {
+        printf("\nMenu de Gestion des Abonnes\n");
+        printf("1. Ajouter un abonne\n");
+        printf("2. Afficher les abonnes\n");
+        printf("3. Modifier un abonne\n");
+        printf("4. Supprimer un abonne\n");
+        printf("5. Emprunter un livre\n");
+        printf("6. Rendre un livre\n");
+        printf("7. Envoyer un livre en reparation\n");
+        printf("8. Quitter\n");
+        printf("Entrez votre choix: ");
+        scanf("%d", &choix);
+
+        switch (choix) {
+            case 1: {
+                Abonne a;
+                Saisir_Abonne(&a);
+                AjoutAbonne(&listeAbonnes, a);
+                break;
+            }
+            case 2: {
+                Afficher_liste_Abonne(listeAbonnes);
+                break;
+            }
+            case 3: {
+                printf("Entrez l'identifiant de l'abonne a modifier: ");
+                scanf("%d", &identifiant);
+                Modifier_Abonne(&listeAbonnes, identifiant);
+                break;
+            }
+            case 4: {
+                printf("Entrez l'identifiant de l'abonne a supprimer: ");
+                scanf("%d", &identifiant);
+                Supprimer_Abonne(&listeAbonnes, identifiant);
+                break;
+            }
+            case 5: {
+                printf("Entrez l'identifiant de l'abonne: ");
+                scanf("%d", &identifiant);
+                printf("Entrez le code du livre a emprunter: ");
+                scanf("%d", &codeLivre);
+                Abonne emprunteur;
+                Emprunter_Livre(listeAbonnes, &listeDisponible, &listeEmprunte, &listeEnReparation, &emprunteur, codeLivre, identifiant);
+                break;
+            }
+            case 6: {
+                printf("Entrez l'identifiant de l'abonne: ");
+                scanf("%d", &identifiant);
+                printf("Entrez le code du livre a rendre: ");
+                scanf("%d", &codeLivre);
+                Abonne emprunteur;
+                Rendre_Livre(listeAbonnes, &listeDisponible, &listeEmprunte, &listeEnReparation, &emprunteur, codeLivre, identifiant);
+                break;
+            }
+            case 7: {
+                printf("Entrez le code du livre a envoyer en reparation: ");
+                scanf("%d", &codeLivre);
+                Abonne emprunteur; // Assuming we have the emprunteur data here
+                Envoyer_Livre_Reparation(&listeDisponible, &listeEmprunte, &listeEnReparation, &emprunteur, codeLivre);
+                break;
+            }
+            case 8: {
+                printf("Fin du programme.\n");
+                // sauvegarderAbonnesDansFichier(&listeAbonnes); // Save any changes before quitting if necessary
+                return 0;
+            }
+            default:
+                printf("Choix non valide, veuillez réessayer.\n");
+        }
+    }
+
+    return 0;
+}
+
 
 
 
