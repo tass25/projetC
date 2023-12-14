@@ -135,8 +135,57 @@ void Emprunter_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emp
         sauvegarderAbonnesDansFichier(&LAB); // Assuming you have a function to handle saving subscribers
     }
 }
+// Send a book for repair
+void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre* En_Reparation, Abonne *A, int x) {
+    Noeud *book_node = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, x);
+    if (book_node == NULL) {
+        printf("\t----Livre introuvable.---\n");
+        return;
+    }
 
+    if (book_node->valeur.Etat == EN_REPARATION) {
+        printf("\t----Ce livre est déjà en réparation.---\n");
+        return;
+    }
 
+    // Move the book to 'En_Reparation' and update its state
+    Supprimer_Livre(Disponible, book_node->valeur.Code);
+    Supprimer_Livre(Emprunte, book_node->valeur.Code);
+    book_node->valeur.Etat = EN_REPARATION;
+    Ajouter_Livre_list(En_Reparation, book_node->valeur);
+    if (A && A->pointeur == &book_node->valeur) {
+        A->pointeur = NULL;
+    }
+
+    // Save changes to the files
+    sauvegarderEtatDesLivres(Disponible, Emprunte, En_Reparation);
+}
+
+// Return a book
+void Rendre_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre* En_Reparation, Abonne *A, int x, int ident) {
+    Noeud *book_node = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, x);
+    Noeud1 *subscriber_node = Chercher_Abonne(LAB, ident);
+    if (book_node == NULL || subscriber_node == NULL) {
+        printf("\t----Livre ou abonné introuvable.---\n");
+        return;
+    }
+
+    if (book_node->valeur.Etat != EMPRUNTE) {
+        printf("\t----Ce livre n'a pas été emprunté.---\n");
+        return;
+    }
+
+    // Update the book's state and the subscriber's borrowed book pointer
+    book_node->valeur.Etat = DISPONIBLE;
+    subscriber_node->AB.pointeur = NULL;
+
+    // Move the book from 'Emprunte' to 'Disponible'
+    Supprimer_Livre(Emprunte, book_node->valeur.Code);
+    Ajouter_Livre_list(Disponible, book_node->valeur);
+
+    // Save changes to the files
+    sauvegarderEtatDesLivres(Disponible, Emprunte, En_Reparation);
+}
 
 
 
