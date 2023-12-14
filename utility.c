@@ -238,7 +238,35 @@ void loader(int x,int y,int z)
     gotoxy(x+3,y+3);
 }
 
+// Save the current state of subscribers into library.txt
+void sauvegarderAbonnesDansFichier(Liste_Abonne *LAB) {
+    FILE *file = fopen("library.txt", "w");
+    if (file == NULL) {
+        perror("Erreur lors de l'écriture du fichier");
+        return;
+    }
+    Noeud1 *current = LAB->tete1;
+    while (current != NULL) {
+        fprintf(file, "%d,%s\n", current->AB.id, current->AB.Nom);
+        current = current->suivant;
+    }
+    fclose(file);
+}
 
+// Load subscribers from library.txt into the Liste_Abonne
+void chargerAbonnesDepuisFichier(Liste_Abonne *LAB) {
+    FILE *file = fopen("library.txt", "r");
+    if (file == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        return;
+    }
+    Abonne tempAbonne;
+    while (fscanf(file, "%d,%[^\n]\n", &tempAbonne.id, tempAbonne.Nom) == 2) {
+        tempAbonne.pointeur = NULL; // Assuming no book is borrowed initially
+        AjoutAbonne(LAB, tempAbonne);
+    }
+    fclose(file);
+}
 
 //mazel user menu w root menu 
 //etude de cas(contextuealisation ) 
