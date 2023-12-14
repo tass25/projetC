@@ -485,13 +485,14 @@ void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Lis
     printf("\n");
 }
 
-
-
 int main() {
     Liste_Livre Disponible, Emprunte, En_Reparation;
     initialiser_liste_Livre(&Disponible);
     initialiser_liste_Livre(&Emprunte);
     initialiser_liste_Livre(&En_Reparation);
+
+    // Load books from file into the lists at the start
+    chargerLivresDepuisFichier(&Disponible, &Emprunte, &En_Reparation);
 
     int choix, code;
 
@@ -563,9 +564,10 @@ int main() {
                 Afficher_Livres_Par_Annee(Disponible, Emprunte, En_Reparation, annee);
                 break;
             }
-            case 9:{
+            case 9: {
                 printf("Fin du programme.\n");
-                return 0;}
+                return 0;
+            }
             default:
                 printf("Choix non valide, veuillez réessayer.\n");
         }
@@ -573,7 +575,6 @@ int main() {
 
     return 0;
 }
-
 
 
 
