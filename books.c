@@ -55,6 +55,29 @@ void saisir_livre(Livre *L) {
     }
 }
 
+void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation) {
+    FILE *file = fopen("books.txt", "r");
+    if (file == NULL) {
+        printf("Erreur lors de l'ouverture du fichier.\n");
+        return;
+    }
+
+    Livre tempLivre;
+    while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
+        switch (tempLivre.Etat) {
+            case 0: // DISPONIBLE
+                Ajouter_Livre_list(Disponible, tempLivre);
+                break;
+            case 1: // EMPRUNTE
+                Ajouter_Livre_list(Emprunte, tempLivre);
+                break;
+            case 2: // EN_REPARATION
+                Ajouter_Livre_list(En_Reparation, tempLivre);
+                break;
+        }
+    }
+    fclose(file);
+}
 
 //another function , another doumou3 , ekhtiyaraty mdamara hayaty :) 
 
@@ -465,60 +488,84 @@ void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Lis
 
 
 int main() {
-  int choix;
-    Liste_Livre liste;
-    initialiser_liste_Livre(&liste);
-    //system("cls");
-    //system("color 9");
-    //splash_s(24, 5, 71, 20);
-    password(30,15);
-    //loader(29, 20, 54);
- while (1) {
+    Liste_Livre Disponible, Emprunte, En_Reparation;
+    initialiser_liste_Livre(&Disponible);
+    initialiser_liste_Livre(&Emprunte);
+    initialiser_liste_Livre(&En_Reparation);
+
+    int choix, code;
+
+    while (1) {
         printf("\nMenu de Gestion de Bibliothèque\n");
         printf("1. Ajouter un livre\n");
         printf("2. Afficher un livre\n");
         printf("3. Supprimer un livre\n");
         printf("4. Chercher un livre\n");
-        printf("5. Quitter\n");
-        printf("Entrez votre choix : ");
+        printf("5. Modifier l'année de publication\n");
+        printf("6. Modifier le titre\n");
+        printf("7. Modifier l'auteur\n");
+        printf("8. Afficher les livres par année\n");
+        printf("9. Quitter\n");
+        printf("Entrez votre choix: ");
         scanf("%d", &choix);
 
         switch (choix) {
             case 1: {
                 Livre l;
                 saisir_livre(&l);
-                Ajouter_Livre_list(&liste, l);
+                Ajouter_Livre_list(&Disponible, l); // Assuming new books are always available
                 break;
             }
             case 2: {
-                int code;
-                printf("Entrez le code du livre à afficher : ");
+                printf("Entrez le code du livre à afficher: ");
                 scanf("%d", &code);
                 Afficher_Livre(code);
                 break;
             }
             case 3: {
-                int code;
-                printf("Entrez le code du livre à supprimer : ");
+                printf("Entrez le code du livre à supprimer: ");
                 scanf("%d", &code);
-                Supprimer_Livre(&liste, code);
+                Supprimer_Livre(&Disponible, code); // Assuming the book is in the available list
                 break;
             }
             case 4: {
-                int code;
-                printf("Entrez le code du livre à chercher : ");
+                printf("Entrez le code du livre à chercher: ");
                 scanf("%d", &code);
-                Noeud *trouve = chercher_Liste(liste, code);
-                if (trouve != NULL) {
-                    printf("Livre trouvé : %s\n", trouve->valeur.Titre);
+                if (Chercher_Livre(Disponible, Emprunte, En_Reparation, code)) {
+                    printf("Livre trouvé.\n");
                 } else {
                     printf("Livre non trouvé.\n");
                 }
                 break;
             }
-            case 5:
+            case 5: {
+                printf("Entrez le code du livre pour modifier l'année de publication: ");
+                scanf("%d", &code);
+                Modifier_Annee_publication(&Disponible, &Emprunte, &En_Reparation, code);
+                break;
+            }
+            case 6: {
+                printf("Entrez le code du livre pour modifier le titre: ");
+                scanf("%d", &code);
+                Modifier_Titre(&Disponible, &Emprunte, &En_Reparation, code);
+                break;
+            }
+            case 7: {
+                printf("Entrez le code du livre pour modifier l'auteur: ");
+                scanf("%d", &code);
+                Modifier_Auteur(&Disponible, &Emprunte, &En_Reparation, code);
+                break;
+            }
+            case 8: {
+                int annee;
+                printf("Entrez l'année pour afficher les livres: ");
+                scanf("%d", &annee);
+                Afficher_Livres_Par_Annee(Disponible, Emprunte, En_Reparation, annee);
+                break;
+            }
+            case 9:{
                 printf("Fin du programme.\n");
-                return 0;
+                return 0;}
             default:
                 printf("Choix non valide, veuillez réessayer.\n");
         }
