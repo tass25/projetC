@@ -108,7 +108,33 @@ Noeud1 *Chercher_Abonne(Liste_Abonne LAB, int ident) {
     return i; // Returns NULL if not found
 }
 
+// Borrow a book
+void Emprunter_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, Abonne *A, int x, int ident) {
+    Noeud *livreNode;
+    Noeud1 *abonneNode;
+    int livreFound;
 
+    livreFound = Chercher_Livre(*Disponible, *Emprunte, *En_Reparation, x);
+    livreNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, x);
+    abonneNode = Chercher_Abonne(LAB, ident);
+
+    if (livreFound != 1) {
+        printf("\t----Ce Livre n'Existe Pas Dans La Liste DISPONIBLE !!---\n");
+    } else if (abonneNode->AB.pointeur != NULL) {
+        printf("\t\t\t** L'Abonne a deja un Livre **\n");
+    } else {
+        livreNode->valeur.Etat = EMPRUNTE; // Assuming 0 is available, 1 is borrowed
+        Ajouter_Livre_list(Emprunte, livreNode->valeur);
+        Supprimer_Livre(Disponible, livreNode->valeur.Code);
+        abonneNode->AB.pointeur = &livreNode->valeur;
+        *A = abonneNode->AB;
+
+        // Save the updated lists to the file
+        sauvegarderLivresDansFichier(Disponible, "Disponible.txt");
+        sauvegarderLivresDansFichier(Emprunte, "Emprunte.txt");
+        sauvegarderAbonnesDansFichier(&LAB); // Assuming you have a function to handle saving subscribers
+    }
+}
 
 
 
