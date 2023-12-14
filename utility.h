@@ -63,5 +63,6 @@ int validName(char *name);// esm ll author
 int validYear(int year) ;//year of publishing 
 int validState(int state);//state of livre
 void password();
-
+void sauvegarderAbonnesDansFichier(Liste_Abonne *LAB);
+void chargerAbonnesDepuisFichier(Liste_Abonne *LAB);
 #endif //PROJET_C_UTILITY_H
