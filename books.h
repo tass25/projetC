@@ -20,5 +20,4 @@ void remplire_liste_Disponible(Liste_Livre *Disponible, int n); //done
 void Afficher_Livre_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int anne);//done
 void Supprimer_Livre(Liste_Livre *l, int x);           //done
 
-
 #endif //PROJET_C_BOOKS_H
