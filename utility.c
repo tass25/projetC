@@ -79,30 +79,33 @@ void password(int x, int y) {
 
 int validTitle(char *title) {
     if (strlen(title) == 0 || strlen(title) >= TAILLE_CHAINE) {
-        return 0; // Invalid title length
+        return 0;
     }
-    FILE *file = fopen("C:\\Users\\labou\\Desktop\\books.txt", "r+");
+    FILE *file = fopen("books.txt", "r");
     if (file == NULL) {
         printf("Error opening file.\n");
         return 0;
     }
 
     char temp[TAILLE_CHAINE];
-    while (fscanf(file, "%*[^,],%[^,],%*d,%*[^,],%*d\n", temp) == 1) {
-        if (strcmp(temp, title) == 0) {
+    while (fgets(temp, TAILLE_CHAINE, file) != NULL) {
+        // Splitting the line to extract title
+        char *found = strstr(temp, title);
+        if (found != NULL && (found == temp || *(found - 1) == ',')) {
             fclose(file);
             return 0; // Title already exists
         }
     }
     fclose(file);
-    return 1; // Valid and unique title
+    return 1;
 }
+
 
 int validCode(int code) {
     if (code <= 0) {
         return 0; // Invalid code
     }
-    FILE *file = fopen("books.txt", "r+");
+    FILE *file = fopen("books.txt", "r");
     if (file == NULL) {
         printf("Error opening file.\n");
         return 0;
@@ -119,11 +122,17 @@ int validCode(int code) {
 }
 
 int validName(char *name) {
-    if (strlen(name) > 0 && strlen(name) <= TAILLE_CHAINE) {
-        return 1; 
+    if (strlen(name) == 0 || strlen(name) > TAILLE_CHAINE) {
+        return 0; // Check for empty or too long name
     }
-    return 0; 
+    for (int i = 0; name[i] != '\0'; i++) {
+        if (!isalpha(name[i])) {
+            return 0; // Check if each character is a letter
+        }
+    }
+    return 1; // Name is valid
 }
+
 int validYear(int year) {
     int currentYear = 2023 ;
     if (year >= 1900 && year <= currentYear) {

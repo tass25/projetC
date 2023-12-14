@@ -14,11 +14,13 @@ void saisir_livre(Livre *L) {
         scanf("%s", L->Titre);
     }
 
+    int inputStatus;
     printf("Saisir son code:\n");
-    scanf("%d", &L->Code);
-    while (!validCode(L->Code)) {
+    inputStatus = scanf("%d", &L->Code);
+    while (!validCode(L->Code) || inputStatus != 1) {
+        while(getchar() != '\n'); // Clear the input buffer
         printf("Code invalide ou déjà existant. Réessayez:\n");
-        scanf("%d", &L->Code);
+        inputStatus = scanf("%d", &L->Code);
     }
 
     printf("Saisir le nom de son auteur:\n");
@@ -28,11 +30,13 @@ void saisir_livre(Livre *L) {
         scanf("%s", L->Auteur);
     }
 
+    int inp;
     printf("Saisir son Annee de publication:\n");
-    scanf("%d", &L->Annee_Publication.annee);
-    while (!validYear(L->Annee_Publication.annee)) {
+    inp = scanf("%d", &L->Annee_Publication.annee);
+    while (!validYear(L->Annee_Publication.annee) || inp != 1) {
+        while(getchar() != '\n'); // Clear the input buffer
         printf("Année de publication invalide. Réessayez:\n");
-        scanf("%d", &L->Annee_Publication.annee);
+        inp = scanf("%d", &L->Annee_Publication.annee);
     }
 
     printf("Donnez l'etat (0: EMPRUNTE, 1: DISPONIBLE, 2: EN_REPARATION):\n");
@@ -460,43 +464,71 @@ void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Lis
 
 
 
-void main() {
- Liste_Livre liste;
+int main() {
+  int choix;
+    Liste_Livre liste;
     initialiser_liste_Livre(&liste);
+    //system("cls");
+    //system("color 9");
+    //splash_s(24, 5, 71, 20);
+    password(30,15);
+    //loader(29, 20, 54);
+ while (1) {
+        printf("\nMenu de Gestion de Bibliothèque\n");
+        printf("1. Ajouter un livre\n");
+        printf("2. Afficher un livre\n");
+        printf("3. Supprimer un livre\n");
+        printf("4. Chercher un livre\n");
+        printf("5. Quitter\n");
+        printf("Entrez votre choix : ");
+        scanf("%d", &choix);
 
-    // Saisie et ajout d'un livre
-    printf("Test de saisie et d'ajout d'un livre\n");
-    Livre l;
-    saisir_livre(&l);
-    Ajouter_Livre_list(&liste, l);
-    
-    // Affichage des livres
-    printf("Affichage des livres\n");
-    Afficher_Livre(l.Code);
-
-    // Modification d'un livre
-    printf("Modification de l'année de publication d'un livre\n");
-    Modifier_Annee_publication(&liste, &liste, &liste, l.Code);
-
-    // Suppression d'un livre
-    printf("Suppression d'un livre\n");
-    Supprimer_Livre(&liste, l.Code);
-
-    // Recherche d'un livre
-    printf("Recherche d'un livre\n");
-    Noeud* found = chercher_Liste(liste, l.Code);
-    if (found != NULL) {
-        printf("Livre trouvé : %s\n", found->valeur.Titre);
-    } else {
-        printf("Livre non trouvé\n");
+        switch (choix) {
+            case 1: {
+                Livre l;
+                saisir_livre(&l);
+                Ajouter_Livre_list(&liste, l);
+                break;
+            }
+            case 2: {
+                int code;
+                printf("Entrez le code du livre à afficher : ");
+                scanf("%d", &code);
+                Afficher_Livre(code);
+                break;
+            }
+            case 3: {
+                int code;
+                printf("Entrez le code du livre à supprimer : ");
+                scanf("%d", &code);
+                Supprimer_Livre(&liste, code);
+                break;
+            }
+            case 4: {
+                int code;
+                printf("Entrez le code du livre à chercher : ");
+                scanf("%d", &code);
+                Noeud *trouve = chercher_Liste(liste, code);
+                if (trouve != NULL) {
+                    printf("Livre trouvé : %s\n", trouve->valeur.Titre);
+                } else {
+                    printf("Livre non trouvé.\n");
+                }
+                break;
+            }
+            case 5:
+                printf("Fin du programme.\n");
+                return 0;
+            default:
+                printf("Choix non valide, veuillez réessayer.\n");
+        }
     }
-
-    // Affichage des livres par année
-    printf("Affichage des livres par année\n");
-    Afficher_Livres_Par_Annee(liste, liste, liste, l.Annee_Publication.annee);
 
     return 0;
 }
+
+
+
 
 
 
