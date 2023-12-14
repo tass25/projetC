@@ -1,18 +1,17 @@
-#include "books.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define  TAILLE_CHAINE 255 
-
+#include <string.h>
+#include "utility.c"
 //l'initialisation d'une liste des livres
 void initialiser_liste_Livre(Liste_Livre*L)
 {L->tete=NULL;}
 
 void saisir_livre(Livre *L) {
     printf("Saisir le titre du Livre:\n");
-    scanf("s", L->Titre);
+    scanf("%s", L->Titre);
     while (!validTitle(L->Titre)) {
         printf("Titre invalide ou déjà existant. Réessayez:\n");
-        scanf("s", L->Titre);
+        scanf("%s", L->Titre);
     }
 
     printf("Saisir son code:\n");
@@ -26,7 +25,7 @@ void saisir_livre(Livre *L) {
     scanf("%29s", L->Auteur);
     while (!validName(L->Auteur)) {
         printf("Nom d'auteur invalide. Réessayez:\n");
-        scanf("s", L->Auteur);
+        scanf("%s", L->Auteur);
     }
 
     printf("Saisir son Annee de publication:\n");
@@ -43,7 +42,7 @@ void saisir_livre(Livre *L) {
         scanf("%d", &L->Etat);
     }
     // Write the book to books.txt
-    FILE *file = fopen("books.txt", "a");
+    FILE *file = fopen("books.txt", "a+");
     if (file != NULL) {
         fprintf(file, "%d,%s,%s,%d,%d\n", L->Code, L->Titre, L->Auteur, L->Annee_Publication.annee, L->Etat);
         fclose(file);
@@ -205,13 +204,13 @@ void Afficher_Livre(int code) {
 int Chercher_Livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code) {
     // Search in Disponible
     if (chercher_Liste(Disponible, code) != NULL) return 1; // Found in Available
-    
+
     // Search in Emprunte
     if (chercher_Liste(Emprunte, code) != NULL) return 2; // Found in Borrowed
-    
+
     // Search in En_Reparation
     if (chercher_Liste(En_Reparation, code) != NULL) return 3; // Found in Under Repair
-    
+
     return 0; // Not found
 }
 
@@ -461,83 +460,43 @@ void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Lis
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void main() {
+ Liste_Livre liste;
+    initialiser_liste_Livre(&liste);
+
+    // Saisie et ajout d'un livre
+    printf("Test de saisie et d'ajout d'un livre\n");
+    Livre l;
+    saisir_livre(&l);
+    Ajouter_Livre_list(&liste, l);
+    
+    // Affichage des livres
+    printf("Affichage des livres\n");
+    Afficher_Livre(l.Code);
+
+    // Modification d'un livre
+    printf("Modification de l'année de publication d'un livre\n");
+    Modifier_Annee_publication(&liste, &liste, &liste, l.Code);
+
+    // Suppression d'un livre
+    printf("Suppression d'un livre\n");
+    Supprimer_Livre(&liste, l.Code);
+
+    // Recherche d'un livre
+    printf("Recherche d'un livre\n");
+    Noeud* found = chercher_Liste(liste, l.Code);
+    if (found != NULL) {
+        printf("Livre trouvé : %s\n", found->valeur.Titre);
+    } else {
+        printf("Livre non trouvé\n");
+    }
+
+    // Affichage des livres par année
+    printf("Affichage des livres par année\n");
+    Afficher_Livres_Par_Annee(liste, liste, liste, l.Annee_Publication.annee);
+
+    return 0;
+}
 
 
 

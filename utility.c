@@ -81,7 +81,7 @@ int validTitle(char *title) {
     if (strlen(title) == 0 || strlen(title) >= TAILLE_CHAINE) {
         return 0; // Invalid title length
     }
-    FILE *file = fopen("books.txt", "r");
+    FILE *file = fopen("C:\\Users\\labou\\Desktop\\books.txt", "r+");
     if (file == NULL) {
         printf("Error opening file.\n");
         return 0;
@@ -91,7 +91,7 @@ int validTitle(char *title) {
     while (fscanf(file, "%*[^,],%[^,],%*d,%*[^,],%*d\n", temp) == 1) {
         if (strcmp(temp, title) == 0) {
             fclose(file);
-            return 0; // Title already exists 
+            return 0; // Title already exists
         }
     }
     fclose(file);
@@ -102,7 +102,7 @@ int validCode(int code) {
     if (code <= 0) {
         return 0; // Invalid code
     }
-    FILE *file = fopen("books.txt", "r");
+    FILE *file = fopen("books.txt", "r+");
     if (file == NULL) {
         printf("Error opening file.\n");
         return 0;
@@ -229,14 +229,7 @@ void loader(int x,int y,int z)
     gotoxy(x+3,y+3);
 }
 
-void main() {
-    system("cls");
-    system("color 9");
-    splash_s(24, 5, 71, 20);
-    password(30,15);
-    loader(29, 20, 54);
 
-}
 
 //mazel user menu w root menu 
 //etude de cas(contextuealisation ) 
