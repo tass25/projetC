@@ -55,6 +55,25 @@ void saisir_livre(Livre *L) {
     }
 }
 
+
+//another function , another doumou3 , ekhtiyaraty mdamara hayaty :) 
+
+void Ajouter_Livre_list(Liste_Livre *l, Livre L) {
+    Noeud *nouveau = (Noeud *)malloc(sizeof(Noeud));
+    nouveau->valeur = L;
+    nouveau->suivant = NULL;
+
+    if (l->tete == NULL) {
+        l->tete = nouveau;
+    } else {
+        Noeud *current = l->tete;
+        while (current->suivant != NULL) {
+            current = current->suivant;
+        }
+        current->suivant = nouveau;
+    }
+}
+
 void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation) {
     FILE *file = fopen("books.txt", "r");
     if (file == NULL) {
@@ -78,25 +97,6 @@ void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *Emprunte, 
     }
     fclose(file);
 }
-
-//another function , another doumou3 , ekhtiyaraty mdamara hayaty :) 
-
-void Ajouter_Livre_list(Liste_Livre *l, Livre L) {
-    Noeud *nouveau = (Noeud *)malloc(sizeof(Noeud));
-    nouveau->valeur = L;
-    nouveau->suivant = NULL;
-
-    if (l->tete == NULL) {
-        l->tete = nouveau;
-    } else {
-        Noeud *current = l->tete;
-        while (current->suivant != NULL) {
-            current = current->suivant;
-        }
-        current->suivant = nouveau;
-    }
-}
-
 //tir flaynnnnn 
 void Supprimer_Livre(Liste_Livre *l, int x) {
     Noeud *current = l->tete, *previous = NULL;
