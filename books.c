@@ -486,7 +486,21 @@ void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Lis
 }
 
 
+void sauvegarderLivresDansFichier(Liste_Livre *liste) {
+    FILE *file = fopen("books.txt", "w");
+    if (file == NULL) {
+        perror("Error opening file");
+        return;
+    }
 
+    Noeud *current = liste->tete;
+    while (current != NULL) {
+        fprintf(file, "%d, %s, %s, %d\n", current->valeur.Code, current->valeur.Titre, current->valeur.Auteur, current->valeur.Etat);
+        current = current->suivant;
+    }
+
+    fclose(file);
+}
 int main() {
     Liste_Livre Disponible, Emprunte, En_Reparation;
     initialiser_liste_Livre(&Disponible);
