@@ -5,8 +5,18 @@
 void initialiser_liste_abonne(Liste_Abonne*LAB)
 {LAB->tete1=NULL;
 }
+int idExisteDeja(Liste_Abonne *LAB, int id) {
+    Noeud1 *current = LAB->tete1;
+    while (current != NULL) {
+        if (current->AB.id == id) {
+            return 1; // ID trouvé
+        }
+        current = current->suivant;
+    }
+    return 0; // ID non trouvé
+}
 
-void Saisir_Abonne(Abonne *A) {
+void Saisir_Abonne(Liste_Abonne *LAB, Abonne *A) {
     // Temporary variable to store the name
     char tempName[TAILLE_CHAINE];
 
@@ -18,16 +28,21 @@ void Saisir_Abonne(Abonne *A) {
     }
     strcpy(A->Nom, tempName); // Copy the valid name to the structure
 
-    int inputStatus;
-    printf("Donnez son Identifiant:\n");
-    inputStatus = scanf("%d", &A->id); // Read the ID
-    while (inputStatus != 1) { // Validate the ID
+    int idUnique;
+    do {
+        printf("Donnez son Identifiant:\n");
+        scanf("%d", &A->id); // Read the ID
         while (getchar() != '\n'); // Clear the input buffer
-        printf("Identifiant invalide. Réessayez:\n");
-        inputStatus = scanf("%d", &A->id);
-    }
+
+        idUnique = !idExisteDeja(LAB, A->id);
+        if (!idUnique) {
+            printf("Un abonne avec l'identifiant %d existe deja. Veuillez saisir un autre identifiant.\n", A->id);
+        }
+    } while (!idUnique);
+
     A->pointeur = NULL;
 }
+
 
 
 // Save the current state of subscribers into library.txt
@@ -62,6 +77,15 @@ void Afficher_Abonne(Abonne A) {
 
 // Add a subscriber to the list
 void AjoutAbonne(Liste_Abonne *LAB, Abonne A) {
+    // Check for existing ID directly in this function
+    for (Noeud1 *current = LAB->tete1; current != NULL; current = current->suivant) {
+        if (current->AB.id == A.id) {
+            printf("Un abonne avec l'identifiant %d existe deja.\n", A.id);
+            return; // Exit if ID already exists
+        }
+    }
+
+    // Proceed with adding the new subscriber
     Noeud1 *nouveau = malloc(sizeof(Noeud1));
     if (!nouveau) {
         perror("Erreur d'allocation mémoire");
@@ -71,6 +95,7 @@ void AjoutAbonne(Liste_Abonne *LAB, Abonne A) {
     nouveau->suivant = LAB->tete1;
     LAB->tete1 = nouveau;
 
+    // Update the file
     FILE *file = fopen("library.txt", "a");
     if (file == NULL) {
         perror("Erreur lors de l'ouverture du fichier");
@@ -80,6 +105,7 @@ void AjoutAbonne(Liste_Abonne *LAB, Abonne A) {
     fprintf(file, "%d,%s\n", A.id, A.Nom);
     fclose(file);
 }
+
 
 
 
@@ -171,33 +197,25 @@ void handleBookBorrowing(Liste_Livre *Disponible, Liste_Livre *Emprunte, int boo
 
 
 // Borrow a book
-void Emprunter_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, Abonne *A, int bookCode, int ident) {
+void Emprunter_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprunte, int bookCode, int ident) {
     Noeud1 *abonneNode = Chercher_Abonne(LAB, ident);
+    Noeud *livreNode = chercher_Liste(*Disponible, bookCode);
 
-    if (!abonneNode || abonneNode->AB.pointeur != NULL) {
+    if (!abonneNode || !livreNode || abonneNode->AB.pointeur != NULL) {
         printf("Abonne non disponible ou a deja un livre.\n");
         return;
     }
 
-    Noeud *bookNode = chercher_Liste(*Disponible, bookCode);
-    if (!bookNode) {
-        printf("Livre non disponible.\n");
-        return;
-    }
+    // Mettre à jour le pointeur du livre de l'abonné
+    abonneNode->AB.pointeur = &livreNode->valeur;
 
-    // Mettre à jour l'état du livre et le déplacer dans la liste des empruntés
-    bookNode->valeur.Etat = EMPRUNTE;
-    Ajouter_Livre_list(Emprunte, bookNode->valeur);
-    Supprimer_Livre(Disponible, bookCode);
+    // Déplacer le livre de la liste Disponible à Emprunte
+    handleBookBorrowing(Disponible, Emprunte, bookCode);
 
-    // Mettre à jour le pointeur de l'abonné vers le livre emprunté
-    abonneNode->AB.pointeur = &bookNode->valeur;
-
-    // Sauvegarder les changements
-    sauvegarderLivresDansFichier(Disponible);
-    sauvegarderLivresDansFichier(Emprunte);
+    // Enregistrez les modifications
     sauvegarderAbonnesDansFichier(&LAB);
 }
+
 
 void sauvegarderEtatDesLivres(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation) {
     FILE *file = fopen("books.txt", "w");
