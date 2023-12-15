@@ -5,18 +5,30 @@
 void initialiser_liste_abonne(Liste_Abonne*LAB)
 {LAB->tete1=NULL;
 }
-void Saisir_Abonne(Abonne *A) {
-    printf("Donnez le Nom de l'Abonne:\n");
-    fgets(A->Nom, sizeof(A->Nom), stdin);
-    A->Nom[strcspn(A->Nom, "\n")] = 0;
 
+void Saisir_Abonne(Abonne *A) {
+    // Temporary variable to store the name
+    char tempName[TAILLE_CHAINE];
+
+    printf("Donnez le Nom de l'Abonne:\n");
+    scanf("%29s", tempName); // Read the name with a limit of 29 characters
+    while (!validName(tempName)) { // Validate the name
+        printf("Nom invalide. Réessayez:\n");
+        scanf("%29s", tempName);
+    }
+    strcpy(A->Nom, tempName); // Copy the valid name to the structure
+
+    int inputStatus;
     printf("Donnez son Identifiant:\n");
-    while (scanf("%d", &A->id) != 1) {
-        printf("Entrée invalide. Veuillez entrer un nombre.\n");
-        while (getchar() != '\n'); // Clear input buffer
+    inputStatus = scanf("%d", &A->id); // Read the ID
+    while (inputStatus != 1) { // Validate the ID
+        while (getchar() != '\n'); // Clear the input buffer
+        printf("Identifiant invalide. Réessayez:\n");
+        inputStatus = scanf("%d", &A->id);
     }
     A->pointeur = NULL;
 }
+
 
 // Save the current state of subscribers into library.txt
 void sauvegarderAbonnesDansFichier(Liste_Abonne *LAB) {
@@ -167,21 +179,26 @@ void Emprunter_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emp
         return;
     }
 
-    // Delegate book-related updates to the function in books.c
-    handleBookBorrowing(Disponible, Emprunte, bookCode);
-
-    // Update the subscriber's borrowed book pointer
-    Noeud *bookNode = chercher_Liste(*Emprunte, bookCode);
-    if (bookNode) {
-        abonneNode->AB.pointeur = &bookNode->valeur;
-    } else {
-        printf("Erreur: le livre n'a pas été trouvé dans la liste des empruntés.\n");
+    Noeud *bookNode = chercher_Liste(*Disponible, bookCode);
+    if (!bookNode) {
+        printf("Livre non disponible.\n");
         return;
     }
 
-    // Save the updated subscriber list
+    // Mettre à jour l'état du livre et le déplacer dans la liste des empruntés
+    bookNode->valeur.Etat = EMPRUNTE;
+    Ajouter_Livre_list(Emprunte, bookNode->valeur);
+    Supprimer_Livre(Disponible, bookCode);
+
+    // Mettre à jour le pointeur de l'abonné vers le livre emprunté
+    abonneNode->AB.pointeur = &bookNode->valeur;
+
+    // Sauvegarder les changements
+    sauvegarderLivresDansFichier(Disponible);
+    sauvegarderLivresDansFichier(Emprunte);
     sauvegarderAbonnesDansFichier(&LAB);
 }
+
 void sauvegarderEtatDesLivres(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation) {
     FILE *file = fopen("books.txt", "w");
     if (file == NULL) {

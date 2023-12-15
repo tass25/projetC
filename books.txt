@@ -1,8 +1,1 @@
-1,hello,aaaa,2001,0
-2,mlio,moo,2001,0
-3,hello1,aaaa,2001,1
-4,mlio1,moo,2001,1
-5,hello2,aaaa,2001,2
-6,mlio2,moo,2001,2
-
-80,555,yyyyyy,2023,0
+2, a, b, 0
