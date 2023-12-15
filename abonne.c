@@ -1,18 +1,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "utility.c"
-
+#include "books.h"
 void initialiser_liste_abonne(Liste_Abonne*LAB)
 {LAB->tete1=NULL;
 }
-// Input a subscriber's data
 void Saisir_Abonne(Abonne *A) {
     printf("Donnez le Nom de l'Abonne:\n");
-    scanf("%s", A->Nom);
-    printf("Donnez son Identifiant\n");
-    scanf("%d", &A->id);
+    fgets(A->Nom, sizeof(A->Nom), stdin);
+    A->Nom[strcspn(A->Nom, "\n")] = 0;
+
+    printf("Donnez son Identifiant:\n");
+    while (scanf("%d", &A->id) != 1) {
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        while (getchar() != '\n'); // Clear input buffer
+    }
     A->pointeur = NULL;
+}
+
+
+/* Define 'sauvegarderListe' as a separate function
+void sauvegarderListe(FILE *f, Liste_Livre *liste, int etat) {
+    Noeud *current = liste->tete;
+    while (current != NULL) {
+        fprintf(f, "%d,%s,%s,%d,%d\n", current->valeur.Code, current->valeur.Titre, current->valeur.Auteur, current->valeur.Annee_Publication.annee, etat);
+        current = current->suivant;
+    }
+}
+
+// Updated 'sauvegarderEtatDesLivres' function
+void sauvegarderEtatDesLivres(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation) {
+    FILE *file = fopen("books.txt", "w");
+    if (file == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        return;
+    }
+
+    sauvegarderListe(file, Disponible, DISPONIBLE);
+    sauvegarderListe(file, Emprunte, EMPRUNTE);
+    sauvegarderListe(file, En_Reparation, EN_REPARATION);
+
+    fclose(file);
+}
+
+*/
+// Save the current state of subscribers into library.txt
+void sauvegarderAbonnesDansFichier(Liste_Abonne *LAB) {
+    FILE *file = fopen("library.txt", "w");
+    if (file == NULL) {
+        perror("Erreur lors de l'écriture du fichier");
+        return;
+    }
+    Noeud1 *current = LAB->tete1;
+    while (current != NULL) {
+        if (fprintf(file, "%d,%s\n", current->AB.id, current->AB.Nom) < 0) {
+            perror("Erreur lors de l'écriture dans le fichier");
+            break;
+        }
+        current = current->suivant;
+    }
+    fclose(file);
 }
 
 // Display a subscriber's data
@@ -30,19 +77,25 @@ void Afficher_Abonne(Abonne A) {
 // Add a subscriber to the list
 void AjoutAbonne(Liste_Abonne *LAB, Abonne A) {
     Noeud1 *nouveau = malloc(sizeof(Noeud1));
-    nouveau->AB = A;
-    nouveau->suivant = NULL;
-    if (LAB->tete1 == NULL) {
-        LAB->tete1 = nouveau;
-    } else {
-        Noeud1 *current = LAB->tete1;
-        while (current->suivant != NULL) {
-            current = current->suivant;
-        }
-        current->suivant = nouveau;
+    if (!nouveau) {
+        perror("Erreur d'allocation mémoire");
+        return;
     }
-    sauvegarderAbonnesDansFichier(LAB); // Save the updated list to the file
+    nouveau->AB = A;
+    nouveau->suivant = LAB->tete1;
+    LAB->tete1 = nouveau;
+
+    FILE *file = fopen("library.txt", "a");
+    if (file == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        free(nouveau);
+        return;
+    }
+    fprintf(file, "%d,%s\n", A.id, A.Nom);
+    fclose(file);
 }
+
+
 
 // Fill the subscriber list with 'n' new subscribers
 void remplire_liste_Abonne(Liste_Abonne *LAB, int n) {
@@ -65,6 +118,15 @@ void Afficher_liste_Abonne(Liste_Abonne LAB) {
             i = i->suivant;
         }
     }
+}
+
+// Search for a subscriber in the list
+Noeud1 *Chercher_Abonne(Liste_Abonne LAB, int ident) {
+    Noeud1 *i = LAB.tete1;
+    while (i != NULL && i->AB.id != ident) {
+        i = i->suivant;
+    }
+    return i; // Returns NULL if not found
 }
 
 // Modify a subscriber's data
@@ -97,15 +159,6 @@ void Supprimer_Abonne(Liste_Abonne *LAB, int x) {
     } else {
         printf("L'abonne avec l'identifiant %d n'existe pas.\n", x);
     }
-}
-
-// Search for a subscriber in the list
-Noeud1 *Chercher_Abonne(Liste_Abonne LAB, int ident) {
-    Noeud1 *i = LAB.tete1;
-    while (i != NULL && i->AB.id != ident) {
-        i = i->suivant;
-    }
-    return i; // Returns NULL if not found
 }
 
 // Borrow a book

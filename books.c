@@ -485,6 +485,8 @@ void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Lis
     printf("\n");
 }
 
+
+
 int main() {
     Liste_Livre Disponible, Emprunte, En_Reparation;
     initialiser_liste_Livre(&Disponible);
