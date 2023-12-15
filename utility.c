@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <windows.h>
+char*Tab_Etat[3]={"EMPRUNTE"," DISPONIBLE","EN_REPARATION"};
 
 #define TAB 9
 

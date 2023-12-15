@@ -6,7 +6,7 @@
 #define PROJET_C_UTILITY_H
 
 #define TAILLE_CHAINE 30  
-char*Tab_Etat[3]={"EMPRUNTE"," DISPONIBLE","EN_REPARATION"};
+extern char*Tab_Etat[3];
 
 #define EMPRUNTE 0
 #define DISPONIBLE 1

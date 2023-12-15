@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "utility.c"
+#include "utility.h"
 //l'initialisation d'une liste des livres
 void initialiser_liste_Livre(Liste_Livre*L)
 {L->tete=NULL;}
