@@ -501,7 +501,7 @@ void sauvegarderLivresDansFichier(Liste_Livre *liste) {
 
     fclose(file);
 }
-int main() {
+/*int main() {
     Liste_Livre Disponible, Emprunte, En_Reparation;
     initialiser_liste_Livre(&Disponible);
     initialiser_liste_Livre(&Emprunte);
@@ -591,7 +591,7 @@ int main() {
 
     return 0;
 }
-
+*/
 
 
 
