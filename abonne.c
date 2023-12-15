@@ -157,6 +157,7 @@ void handleBookBorrowing(Liste_Livre *Disponible, Liste_Livre *Emprunte, int boo
 }
 
 
+
 // Borrow a book
 void Emprunter_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, Abonne *A, int bookCode, int ident) {
     Noeud1 *abonneNode = Chercher_Abonne(LAB, ident);
@@ -181,6 +182,37 @@ void Emprunter_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emp
     // Save the updated subscriber list
     sauvegarderAbonnesDansFichier(&LAB);
 }
+void sauvegarderEtatDesLivres(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation) {
+    FILE *file = fopen("books.txt", "w");
+    if (file == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        return;
+    }
+
+    // Save 'Disponible' list
+    Noeud *current = Disponible->tete;
+    while (current != NULL) {
+        fprintf(file, "%d,%s,%s,%d,%d\n", current->valeur.Code, current->valeur.Titre, current->valeur.Auteur, current->valeur.Annee_Publication.annee, DISPONIBLE);
+        current = current->suivant;
+    }
+
+    // Save 'Emprunte' list
+    current = Emprunte->tete;
+    while (current != NULL) {
+        fprintf(file, "%d,%s,%s,%d,%d\n", current->valeur.Code, current->valeur.Titre, current->valeur.Auteur, current->valeur.Annee_Publication.annee, EMPRUNTE);
+        current = current->suivant;
+    }
+
+    // Save 'En_Reparation' list
+    current = En_Reparation->tete;
+    while (current != NULL) {
+        fprintf(file, "%d,%s,%s,%d,%d\n", current->valeur.Code, current->valeur.Titre, current->valeur.Auteur, current->valeur.Annee_Publication.annee, EN_REPARATION);
+        current = current->suivant;
+    }
+
+    fclose(file);
+}
+
 
 
 // Send a book for repair
@@ -234,9 +266,6 @@ void Rendre_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprun
     // Save changes to the files
     sauvegarderEtatDesLivres(Disponible, Emprunte, En_Reparation);
 }
-#include <stdio.h>
-#include <stdlib.h>
-#include "utility.c"  // Assuming utility.c contains all the necessary definitions and functions
 
 int main() {
     // Initializations

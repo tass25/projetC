@@ -19,7 +19,6 @@ void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre
 void remplire_liste_Disponible(Liste_Livre *Disponible, int n); //done
 void Afficher_Livre_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int anne);//done
 void Supprimer_Livre(Liste_Livre *l, int x);           //done
-// In books.h
 void sauvegarderLivresDansFichier(Liste_Livre *liste);
 
 #endif //PROJET_C_BOOKS_H
