@@ -5,20 +5,20 @@
 
 #include "utility.h"
 
-void initialiser_liste_Livre(Liste_Livre *L);           //done
-void saisir_livre(Livre *L);                           //done
-void Ajouter_Livre_list(Liste_Livre *l, Livre L);     //done
-Noeud *chercher_Liste(Liste_Livre l, int code);      //done
-void Afficher_Livre(int code);                      // done
-int chercher_Livre_Dans_Fichier(Livre *L, int code); //done
-int Chercher_Livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code);//done
-Noeud *Recherche_livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code);//done
-void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int xx);//done
-void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int xx);//done
-void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int xx);//done
-void remplire_liste_Disponible(Liste_Livre *Disponible, int n); //done
-void Afficher_Livre_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int anne);//done
-void Supprimer_Livre(Liste_Livre *l, int x);           //done
+void initialiser_liste_Livre(Liste_Livre *L);
+void saisir_livre(Livre *L);
+void Ajouter_Livre_list(Liste_Livre *l, Livre L);
+void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation);
+void Supprimer_Livre(Liste_Livre *l, int x);
+Noeud *chercher_Liste(Liste_Livre l, int code);
+int chercher_Livre_Dans_Fichier(Livre *L, int code);
+void Afficher_Livre(int code);
+int Chercher_Livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code);
+Noeud *Recherche_livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code);
+void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code);
+void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code);
+void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code);
+void remplire_liste_Disponible(Liste_Livre *Disponible, int n);
+void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int annee);
 void sauvegarderLivresDansFichier(Liste_Livre *liste);
-
 #endif //PROJET_C_BOOKS_H
