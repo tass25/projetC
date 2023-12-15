@@ -112,12 +112,25 @@ void AjoutAbonne(Liste_Abonne *LAB, Abonne A) {
 // Fill the subscriber list with 'n' new subscribers
 void remplire_liste_Abonne(Liste_Abonne *LAB, int n) {
     Abonne A;
+    int idAlreadyExists;
+
     for (int i = 0; i < n; i++) {
-        printf(" Saisie de l'Abonne /%d/\n", i + 1);
-        Saisir_Abonne(&A);
-        AjoutAbonne(LAB, A);
+        do {
+            printf("Saisie de l'Abonne /%d/\n", i + 1);
+            Saisir_Abonne(LAB, &A);
+
+            // Check if the ID already exists
+            idAlreadyExists = idExisteDeja(LAB, A.id);
+            if (idAlreadyExists) {
+                printf("Un abonne avec l'identifiant %d existe deja. Veuillez saisir à nouveau.\n", A.id);
+            }
+        } while (idAlreadyExists); // Loop until a unique ID is entered
+
+        AjoutAbonne(LAB, A); // Add the subscriber only if the ID is unique
     }
 }
+
+
 
 // Display the entire list of subscribers
 void Afficher_liste_Abonne(Liste_Abonne LAB) {
