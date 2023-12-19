@@ -295,7 +295,7 @@ void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *En_Reparat
 
 void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *, Liste_Livre *En_Reparation, int code) {
     // Search for the book in the lists
-    Noeud *bookNode = Recherche_livre(*Disponible, *, *En_Reparation, code);
+    Noeud *bookNode = Recherche_livre(*Disponible, *En_Reparation, code);
 
     // Open the original and temporary files
     FILE *file = fopen("books.txt", "r");
@@ -343,9 +343,9 @@ void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *, Liste_Livre *En_Repa
 
 
 
-void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *, Liste_Livre *En_Reparation, int code) {
+void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *En_Reparation, int code) {
     // Search for the book in the lists
-    Noeud *bookNode = Recherche_livre(*Disponible, *, *En_Reparation, code);
+    Noeud *bookNode = Recherche_livre(*Disponible, *En_Reparation, code);
 
     // Open the original and temporary files
     FILE *file = fopen("books.txt", "r");
@@ -413,7 +413,7 @@ void remplire_liste_Disponible(Liste_Livre *Disponible, int n) {
     }
 }
 
-void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre , Liste_Livre En_Reparation, int anne) {
+void Afficher_Livres_Par_Annee(Liste_Livre Disponible , Liste_Livre En_Reparation, int anne) {
     Noeud *current;
     int count;
 
@@ -428,24 +428,6 @@ void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre , Liste_Livre
             if (current->valeur.Annee_Publication.annee == anne) {
                 printf("Le Livre Num /%d/ :\n", count);
                 Afficher_Livre(current->valeur.Code); // Call Afficher_Livre with the book code
-                count++;
-            }
-            current = current->suivant;
-        }
-    }
-    printf("\n");
-
-    // Display borrowed books from the specified year
-    current = .tete;
-    count = 1;
-    printf("La Liste Des Livres s Parus A L'Annee %d Est :\n", anne);
-    if (current == NULL) {
-        printf("\t----La Liste Est Vide !!!---\n");
-    } else {
-        while (current != NULL) {
-            if (current->valeur.Annee_Publication.annee == anne) {
-                printf("Le Livre Num /%d/ :\n", count);
-                Afficher_Livre(current->valeur.Code);
                 count++;
             }
             current = current->suivant;
