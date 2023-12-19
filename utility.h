@@ -6,7 +6,7 @@
 #define PROJET_C_UTILITY_H
 
 #define TAILLE_CHAINE 30  
-extern char*Tab_Etat[3];
+extern char*Tab_Etat[2];
 
 #define EMPRUNTE 0
 #define DISPONIBLE 1

@@ -99,10 +99,6 @@ void AjoutAbonne(Liste_Abonne *LAB, Abonne A) {
     fprintf(file, "%d,%s\n", A.id, A.Nom);
     fclose(file);
 }
-
-
-
-
 // Fill the subscriber list with 'n' new subscribers
 void remplire_liste_Abonne(Liste_Abonne *LAB, int n) {
     Abonne A;
@@ -123,9 +119,6 @@ void remplire_liste_Abonne(Liste_Abonne *LAB, int n) {
         AjoutAbonne(LAB, A); // Add the subscriber only if the ID is unique
     }
 }
-
-
-
 
 // Display the entire list of subscribers
 void Afficher_liste_Abonne(Liste_Abonne LAB) {
@@ -180,86 +173,6 @@ void Supprimer_Abonne(Liste_Abonne *LAB, int x) {
         printf("L'abonne avec l'identifiant %d n'existe pas.\n", x);
     }
 }
-void handleBookBorrowing(Liste_Livre *Disponible, Liste_Livre *Emprunte, int bookCode) {
-    // Check if the book is in the 'Disponible' list
-    Noeud *bookNode = chercher_Liste(*Disponible, bookCode);
-    
-    if (!bookNode) {
-        printf("Livre non disponible.\n");
-        return;
-    }
-
-    // Update the book status to EMPRUNTE and add it to the 'Emprunte' list
-    Livre borrowedBook = bookNode->valeur;
-    borrowedBook.Etat = EMPRUNTE;
-    Ajouter_Livre_list(Emprunte, borrowedBook);
-    
-    // Remove the book from the 'Disponible' list
-    Supprimer_Livre(Disponible, bookCode);
-
-    // Save the updated book lists
-    sauvegarderLivresDansFichier(Disponible);
-    sauvegarderLivresDansFichier(Emprunte);
-}
-
-
-
-// Borrow a book
-void Emprunter_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprunte, int bookCode, int ident) {
-    Noeud1 *abonneNode = Chercher_Abonne(LAB, ident);
-    Noeud *livreNode = chercher_Liste(*Disponible, bookCode);
-
-    if (!abonneNode) {
-        printf("Abonne avec l'identifiant %d non trouve.\n", ident);
-        return;  // Return to the calling function, don't exit program
-    }
-
-    if (!livreNode) {
-        printf("Livre avec le code %d non disponible.\n", bookCode);
-        return;  // Return to the calling function, don't exit program
-    }
-
-    if (abonneNode->AB.pointeur != NULL) {
-        printf("L'abonne a deja emprunte un livre.\n");
-        return;  // Return to the calling function, don't exit program
-    }
-
-    // The rest of your code for processing the borrowing
-}
-
-
-
-void sauvegarderEtatDesLivres(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation) {
-    FILE *file = fopen("books.txt", "w");
-    if (file == NULL) {
-        perror("Erreur lors de l'ouverture du fichier");
-        return;
-    }
-
-    // Save 'Disponible' list
-    Noeud *current = Disponible->tete;
-    while (current != NULL) {
-        fprintf(file, "%d,%s,%s,%d,%d\n", current->valeur.Code, current->valeur.Titre, current->valeur.Auteur, current->valeur.Annee_Publication.annee, DISPONIBLE);
-        current = current->suivant;
-    }
-
-    // Save 'Emprunte' list
-    current = Emprunte->tete;
-    while (current != NULL) {
-        fprintf(file, "%d,%s,%s,%d,%d\n", current->valeur.Code, current->valeur.Titre, current->valeur.Auteur, current->valeur.Annee_Publication.annee, EMPRUNTE);
-        current = current->suivant;
-    }
-
-    // Save 'En_Reparation' list
-    current = En_Reparation->tete;
-    while (current != NULL) {
-        fprintf(file, "%d,%s,%s,%d,%d\n", current->valeur.Code, current->valeur.Titre, current->valeur.Auteur, current->valeur.Annee_Publication.annee, EN_REPARATION);
-        current = current->suivant;
-    }
-
-    fclose(file);
-}
-
 
 
 // Send a book for repair
@@ -277,7 +190,6 @@ void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre *Emprunte, Li
 
     // Move the book to 'En_Reparation' and update its state
     Supprimer_Livre(Disponible, book_node->valeur.Code);
-    Supprimer_Livre(Emprunte, book_node->valeur.Code);
     book_node->valeur.Etat = EN_REPARATION;
     Ajouter_Livre_list(En_Reparation, book_node->valeur);
     if (A && A->pointeur == &book_node->valeur) {
@@ -288,31 +200,6 @@ void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre *Emprunte, Li
     sauvegarderEtatDesLivres(Disponible, Emprunte, En_Reparation);
 }
 
-// Return a book
-void Rendre_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre* En_Reparation, Abonne *A, int x, int ident) {
-    Noeud *book_node = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, x);
-    Noeud1 *subscriber_node = Chercher_Abonne(LAB, ident);
-    if (book_node == NULL || subscriber_node == NULL) {
-        printf("\t----Livre ou abonné introuvable.---\n");
-        return;
-    }
-
-    if (book_node->valeur.Etat != EMPRUNTE) {
-        printf("\t----Ce livre n'a pas été emprunté.---\n");
-        return;
-    }
-
-    // Update the book's state and the subscriber's borrowed book pointer
-    book_node->valeur.Etat = DISPONIBLE;
-    subscriber_node->AB.pointeur = NULL;
-
-    // Move the book from 'Emprunte' to 'Disponible'
-    Supprimer_Livre(Emprunte, book_node->valeur.Code);
-    Ajouter_Livre_list(Disponible, book_node->valeur);
-
-    // Save changes to the files
-    sauvegarderEtatDesLivres(Disponible, Emprunte, En_Reparation);
-}
 void chargerAbonnesDepuisFichier(Liste_Abonne *LAB) {
     FILE *file = fopen("library.txt", "r");
     if (file == NULL) {
