@@ -142,7 +142,7 @@ int validYear(int year) {
     return 0; 
 }
 int validState(int state) {
-    if (state == EMPRUNTE || state == DISPONIBLE || state == EN_REPARATION) {
+    if ( state == DISPONIBLE || state == EN_REPARATION) {
         return 1; 
     }
     return 0; 

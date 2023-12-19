@@ -176,8 +176,8 @@ void Supprimer_Abonne(Liste_Abonne *LAB, int x) {
 
 
 // Send a book for repair
-void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre* En_Reparation, Abonne *A, int x) {
-    Noeud *book_node = Recherche_livre(*Disponible, *En_Reparation, x);
+void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre *En_Reparation, Abonne *A, int x) {
+    Noeud *book_node = Recherche_livre(*Disponible, *En_Reparation, x); // Correction ici
     if (book_node == NULL) {
         printf("\t----Livre introuvable.---\n");
         return;
@@ -197,7 +197,7 @@ void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre* En_Reparatio
     }
 
     // Save changes to the files
-    sauvegarderEtatDesLivres(Disponible, Emprunte, En_Reparation);
+    sauvegarderEtatDesLivres(Disponible, En_Reparation);
 }
 
 void chargerAbonnesDepuisFichier(Liste_Abonne *LAB) {
@@ -210,7 +210,9 @@ void chargerAbonnesDepuisFichier(Liste_Abonne *LAB) {
     Abonne temp;
     while (fscanf(file, "%d,%29s", &temp.id, temp.Nom) == 2) {
         temp.pointeur = NULL; // Assuming no borrowed book info is stored
-        AjoutAbonne(LAB, temp);
+        if (!idExisteDeja(LAB, temp.id)) { // Ajoute uniquement si l'ID n'existe pas déjà
+            AjoutAbonne(LAB, temp);
+        }
     }
     fclose(file);
 }
