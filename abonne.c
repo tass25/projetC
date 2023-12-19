@@ -176,8 +176,8 @@ void Supprimer_Abonne(Liste_Abonne *LAB, int x) {
 
 
 // Send a book for repair
-void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre* En_Reparation, Abonne *A, int x) {
-    Noeud *book_node = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, x);
+void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre* En_Reparation, Abonne *A, int x) {
+    Noeud *book_node = Recherche_livre(*Disponible, *En_Reparation, x);
     if (book_node == NULL) {
         printf("\t----Livre introuvable.---\n");
         return;

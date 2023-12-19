@@ -39,7 +39,7 @@ void saisir_livre(Livre *L) {
         inp = scanf("%d", &L->Annee_Publication.annee);
     }
 
-    printf("Donnez l'etat (0: EMPRUNTE, 1: DISPONIBLE, 2: EN_REPARATION):\n");
+    printf("Donnez l'etat (0: , 1: DISPONIBLE, 2: EN_REPARATION):\n");
     scanf("%d", &L->Etat);
     while (!validState(L->Etat)) {
         printf("État invalide. Réessayez:\n");
@@ -74,7 +74,7 @@ void Ajouter_Livre_list(Liste_Livre *l, Livre L) {
     }
 }
 
-void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation) {
+void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *En_Reparation) {
     FILE *file = fopen("books.txt", "r");
     if (file == NULL) {
         printf("Erreur lors de l'ouverture du fichier.\n");
@@ -87,10 +87,7 @@ void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *Emprunte, 
             case 0: // DISPONIBLE
                 Ajouter_Livre_list(Disponible, tempLivre);
                 break;
-            case 1: // EMPRUNTE
-                Ajouter_Livre_list(Emprunte, tempLivre);
-                break;
-            case 2: // EN_REPARATION
+            case 1: // EN_REPARATION
                 Ajouter_Livre_list(En_Reparation, tempLivre);
                 break;
         }
@@ -210,9 +207,6 @@ void Afficher_Livre(int code) {
         printf("Etat: ");
 
         switch (L.Etat) {
-            case EMPRUNTE:
-                printf("Emprunte\n");
-                break;
             case DISPONIBLE:
                 printf("Disponible\n");
                 break;
@@ -228,12 +222,9 @@ void Afficher_Livre(int code) {
     }
 }
 
-int Chercher_Livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code) {
+int Chercher_Livre(Liste_Livre Disponible, Liste_Livre En_Reparation, int code) {
     // Search in Disponible
     if (chercher_Liste(Disponible, code) != NULL) return 1; // Found in Available
-
-    // Search in Emprunte
-    if (chercher_Liste(Emprunte, code) != NULL) return 2; // Found in Borrowed
 
     // Search in En_Reparation
     if (chercher_Liste(En_Reparation, code) != NULL) return 3; // Found in Under Repair
@@ -242,25 +233,21 @@ int Chercher_Livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_
 }
 
 
-Noeud *Recherche_livre(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int code) {
+Noeud *Recherche_livre(Liste_Livre Disponible, Liste_Livre En_Reparation, int code) {
     Noeud *foundNode;
 
     // Search in the 'Disponible' list
     foundNode = chercher_Liste(Disponible, code);
     if (foundNode != NULL) return foundNode; // Book found in the available list
 
-    // Search in the 'Emprunte' list
-    foundNode = chercher_Liste(Emprunte, code);
-    if (foundNode != NULL) return foundNode; // Book found in the borrowed list
-
     // Search in the 'En_Reparation' list
     foundNode = chercher_Liste(En_Reparation, code);
     return foundNode; // Return the found node or NULL if not found in any list
 }
 
-void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code) {
+void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *En_Reparation, int code) {
     // Search for the book in the lists
-    Noeud *bookNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, code);
+    Noeud *bookNode = Recherche_livre(*Disponible,*En_Reparation, code);
 
     // Open the original and temporary files
     FILE *file = fopen("books.txt", "r");
@@ -306,9 +293,9 @@ void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *Emprunte, 
     }
 }
 
-void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code) {
+void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *, Liste_Livre *En_Reparation, int code) {
     // Search for the book in the lists
-    Noeud *bookNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, code);
+    Noeud *bookNode = Recherche_livre(*Disponible, *, *En_Reparation, code);
 
     // Open the original and temporary files
     FILE *file = fopen("books.txt", "r");
@@ -356,9 +343,9 @@ void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre 
 
 
 
-void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation, int code) {
+void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *, Liste_Livre *En_Reparation, int code) {
     // Search for the book in the lists
-    Noeud *bookNode = Recherche_livre(*Disponible, *Emprunte, *En_Reparation, code);
+    Noeud *bookNode = Recherche_livre(*Disponible, *, *En_Reparation, code);
 
     // Open the original and temporary files
     FILE *file = fopen("books.txt", "r");
@@ -426,7 +413,7 @@ void remplire_liste_Disponible(Liste_Livre *Disponible, int n) {
     }
 }
 
-void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Liste_Livre En_Reparation, int anne) {
+void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre , Liste_Livre En_Reparation, int anne) {
     Noeud *current;
     int count;
 
@@ -449,9 +436,9 @@ void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre Emprunte, Lis
     printf("\n");
 
     // Display borrowed books from the specified year
-    current = Emprunte.tete;
+    current = .tete;
     count = 1;
-    printf("La Liste Des Livres Empruntes Parus A L'Annee %d Est :\n", anne);
+    printf("La Liste Des Livres s Parus A L'Annee %d Est :\n", anne);
     if (current == NULL) {
         printf("\t----La Liste Est Vide !!!---\n");
     } else {
@@ -502,13 +489,13 @@ void sauvegarderLivresDansFichier(Liste_Livre *liste) {
     fclose(file);
 }
 /*int main() {
-    Liste_Livre Disponible, Emprunte, En_Reparation;
+    Liste_Livre Disponible, , En_Reparation;
     initialiser_liste_Livre(&Disponible);
-    initialiser_liste_Livre(&Emprunte);
+    initialiser_liste_Livre(&);
     initialiser_liste_Livre(&En_Reparation);
 
     // Load books from file into the lists at the start
-    chargerLivresDepuisFichier(&Disponible, &Emprunte, &En_Reparation);
+    chargerLivresDepuisFichier(&Disponible, &, &En_Reparation);
 
     int choix, code;
 
@@ -548,7 +535,7 @@ void sauvegarderLivresDansFichier(Liste_Livre *liste) {
             case 4: {
                 printf("Entrez le code du livre à chercher: ");
                 scanf("%d", &code);
-                if (Chercher_Livre(Disponible, Emprunte, En_Reparation, code)) {
+                if (Chercher_Livre(Disponible, , En_Reparation, code)) {
                     printf("Livre trouvé.\n");
                 } else {
                     printf("Livre non trouvé.\n");
@@ -558,26 +545,26 @@ void sauvegarderLivresDansFichier(Liste_Livre *liste) {
             case 5: {
                 printf("Entrez le code du livre pour modifier l'année de publication: ");
                 scanf("%d", &code);
-                Modifier_Annee_publication(&Disponible, &Emprunte, &En_Reparation, code);
+                Modifier_Annee_publication(&Disponible, &, &En_Reparation, code);
                 break;
             }
             case 6: {
                 printf("Entrez le code du livre pour modifier le titre: ");
                 scanf("%d", &code);
-                Modifier_Titre(&Disponible, &Emprunte, &En_Reparation, code);
+                Modifier_Titre(&Disponible, &, &En_Reparation, code);
                 break;
             }
             case 7: {
                 printf("Entrez le code du livre pour modifier l'auteur: ");
                 scanf("%d", &code);
-                Modifier_Auteur(&Disponible, &Emprunte, &En_Reparation, code);
+                Modifier_Auteur(&Disponible, &, &En_Reparation, code);
                 break;
             }
             case 8: {
                 int annee;
                 printf("Entrez l'année pour afficher les livres: ");
                 scanf("%d", &annee);
-                Afficher_Livres_Par_Annee(Disponible, Emprunte, En_Reparation, annee);
+                Afficher_Livres_Par_Annee(Disponible, , En_Reparation, annee);
                 break;
             }
             case 9: {
