@@ -1,32 +1,36 @@
-#include "abonne.h"  // Include the header file for abonne.c
-#include "books.h"   // Include the header file for books.c if necessary
-#include<stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "abonne.h" // Include your header files for abonne and books
+#include "books.h"
+
 int main() {
-    // Initializations
     Liste_Abonne listeAbonnes;
-    Liste_Livre listeDisponible, listeEmprunte, listeEnReparation;
-
     initialiser_liste_abonne(&listeAbonnes);
-    initialiser_liste_Livre(&listeDisponible);  // Assuming these functions are defined in books.c
-    initialiser_liste_Livre(&listeEmprunte);
-    initialiser_liste_Livre(&listeEnReparation);
 
-    int choix;
-    int identifiant;  // For storing subscriber ID
-    int bookCode;     // For storing book code
+    // Load existing subscribers
+    chargerAbonnesDepuisFichier(&listeAbonnes);
 
-    do {
-        printf("\n---- Menu de Test ----\n");
+    Liste_Livre listeDisponible;
+    Liste_Livre listeEmprunte;
+    Liste_Livre listeEnReparation;
+
+    // Initialize other lists similar to listeAbonnes if needed
+
+    int choix, identifiant, codeLivre;
+
+    while (1) {
+        printf("\nMenu de Gestion de Bibliotheque\n");
         printf("1. Ajouter un abonne\n");
         printf("2. Afficher les abonnes\n");
         printf("3. Modifier un abonne\n");
         printf("4. Supprimer un abonne\n");
-        printf("5. Emprunter un livre\n");
-        printf("6. Rendre un livre\n");
+        //printf("5. Emprunter un livre\n");
+        //printf("6. Rendre un livre\n");
         printf("7. Envoyer un livre en reparation\n");
         printf("8. Quitter\n");
         printf("Entrez votre choix: ");
         scanf("%d", &choix);
+        getchar(); // To consume the newline character after scanf
 
         switch (choix) {
             case 1: {
@@ -51,38 +55,24 @@ int main() {
                 Supprimer_Abonne(&listeAbonnes, identifiant);
                 break;
             }
+            
+    
             case 5: {
-                printf("Entrez l'identifiant de l'abonne: ");
-                scanf("%d", &identifiant);
-                printf("Entrez le code du livre a emprunter: ");
-                scanf("%d", &bookCode);
-                Emprunter_Livre(listeAbonnes, &listeDisponible, &listeEmprunte, &listeEnReparation, NULL, bookCode, identifiant);
+                printf("Entrez le code du livre a envoyer en reparation: ");
+                scanf("%d", &codeLivre);
+                Envoyer_Livre_Reparation(&listeDisponible, &listeEmprunte, &listeEnReparation, NULL, codeLivre);  // Pass NULL if Abonne not needed
                 break;
             }
             case 6: {
-                printf("Entrez l'identifiant de l'abonne: ");
-                scanf("%d", &identifiant);
-                printf("Entrez le code du livre a rendre: ");
-                scanf("%d", &bookCode);
-                Rendre_Livre(listeAbonnes, &listeDisponible, &listeEmprunte, &listeEnReparation, NULL, bookCode, identifiant);
-                break;
-            }
-            case 7: {
-                printf("Entrez le code du livre a envoyer en reparation: ");
-                scanf("%d", &bookCode);
-                Envoyer_Livre_Reparation(&listeDisponible, &listeEmprunte, &listeEnReparation, NULL, bookCode);
-                break;
-            }
-            case 8: {
                 printf("Fin du programme.\n");
-                break;
+                sauvegarderAbonnesDansFichier(&listeAbonnes); // Save current state before exiting
+                return 0;
             }
             default: {
-                printf("Choix non valide, veuillez réessayer.\n");
-                break;
+                printf("Choix non valide. Veuillez réessayer.\n");
             }
         }
-    } while (choix != 8);
+    }
 
     return 0;
 }

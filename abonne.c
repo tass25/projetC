@@ -16,33 +16,27 @@ int idExisteDeja(Liste_Abonne *LAB, int id) {
     return 0; // ID non trouvé
 }
 
-void Saisir_Abonne(Liste_Abonne *LAB, Abonne *A) {
-    // Temporary variable to store the name
+void Saisir_Abonne(Abonne *A) {
     char tempName[TAILLE_CHAINE];
 
+    // Input and validate the name of the abonné
     printf("Donnez le Nom de l'Abonne:\n");
-    scanf("%29s", tempName); // Read the name with a limit of 29 characters
-    while (!validName(tempName)) { // Validate the name
+    scanf("%29s", tempName);  // Read the name with a limit of 29 characters
+    while (!validName(tempName)) {  // Validate the name
         printf("Nom invalide. Réessayez:\n");
         scanf("%29s", tempName);
     }
-    strcpy(A->Nom, tempName); // Copy the valid name to the structure
+    strcpy(A->Nom, tempName);  // Copy the valid name to the Abonne structure
 
-    int idUnique;
-    do {
-        printf("Donnez son Identifiant:\n");
-        scanf("%d", &A->id); // Read the ID
-        while (getchar() != '\n'); // Clear the input buffer
+    // Input the ID of the abonné
+    printf("Donnez son Identifiant:\n");
+    while (scanf("%d", &A->id) != 1) {  // Validate the ID
+        printf("Identifiant invalide. Réessayez:\n");
+        while (getchar() != '\n');  // Clear the input buffer
+    }
 
-        idUnique = !idExisteDeja(LAB, A->id);
-        if (!idUnique) {
-            printf("Un abonne avec l'identifiant %d existe deja. Veuillez saisir un autre identifiant.\n", A->id);
-        }
-    } while (!idUnique);
-
-    A->pointeur = NULL;
+    A->pointeur = NULL;  // Initialize the pointer to NULL
 }
-
 
 
 // Save the current state of subscribers into library.txt
@@ -117,7 +111,7 @@ void remplire_liste_Abonne(Liste_Abonne *LAB, int n) {
     for (int i = 0; i < n; i++) {
         do {
             printf("Saisie de l'Abonne /%d/\n", i + 1);
-            Saisir_Abonne(LAB, &A);
+            Saisir_Abonne( &A);
 
             // Check if the ID already exists
             idAlreadyExists = idExisteDeja(LAB, A.id);
@@ -129,6 +123,7 @@ void remplire_liste_Abonne(Liste_Abonne *LAB, int n) {
         AjoutAbonne(LAB, A); // Add the subscriber only if the ID is unique
     }
 }
+
 
 
 
@@ -214,20 +209,24 @@ void Emprunter_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emp
     Noeud1 *abonneNode = Chercher_Abonne(LAB, ident);
     Noeud *livreNode = chercher_Liste(*Disponible, bookCode);
 
-    if (!abonneNode || !livreNode || abonneNode->AB.pointeur != NULL) {
-        printf("Abonne non disponible ou a deja un livre.\n");
-        return;
+    if (!abonneNode) {
+        printf("Abonne avec l'identifiant %d non trouve.\n", ident);
+        return;  // Return to the calling function, don't exit program
     }
 
-    // Mettre à jour le pointeur du livre de l'abonné
-    abonneNode->AB.pointeur = &livreNode->valeur;
+    if (!livreNode) {
+        printf("Livre avec le code %d non disponible.\n", bookCode);
+        return;  // Return to the calling function, don't exit program
+    }
 
-    // Déplacer le livre de la liste Disponible à Emprunte
-    handleBookBorrowing(Disponible, Emprunte, bookCode);
+    if (abonneNode->AB.pointeur != NULL) {
+        printf("L'abonne a deja emprunte un livre.\n");
+        return;  // Return to the calling function, don't exit program
+    }
 
-    // Enregistrez les modifications
-    sauvegarderAbonnesDansFichier(&LAB);
+    // The rest of your code for processing the borrowing
 }
+
 
 
 void sauvegarderEtatDesLivres(Liste_Livre *Disponible, Liste_Livre *Emprunte, Liste_Livre *En_Reparation) {
@@ -313,6 +312,20 @@ void Rendre_Livre(Liste_Abonne LAB, Liste_Livre *Disponible, Liste_Livre *Emprun
 
     // Save changes to the files
     sauvegarderEtatDesLivres(Disponible, Emprunte, En_Reparation);
+}
+void chargerAbonnesDepuisFichier(Liste_Abonne *LAB) {
+    FILE *file = fopen("library.txt", "r");
+    if (file == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        return;
+    }
+
+    Abonne temp;
+    while (fscanf(file, "%d,%29s", &temp.id, temp.Nom) == 2) {
+        temp.pointeur = NULL; // Assuming no borrowed book info is stored
+        AjoutAbonne(LAB, temp);
+    }
+    fclose(file);
 }
 
 
