@@ -8,7 +8,7 @@
 #include "utility.h"
 #define ENTER 13
 #define BKSP 8
-
+void rootMenu() ;
 
 void book_management() {
     Liste_Livre Disponible, En_Reparation;
@@ -57,26 +57,41 @@ system("cls");
             printf("Entrez le code du livre à afficher: ");
             scanf("%d", &code);
             Afficher_Livre(code);
+             printf("Press Any To Continue.....");
+            getch();
+            return book_management() ;
             break;
         case 3:
             printf("Entrez le code du livre à supprimer: ");
             scanf("%d", &code);
             Supprimer_Livre(&Disponible, code);
+             printf("Press Any To Continue.....");
+            getch();
+            return book_management() ;
             break;
         case 4:
             printf("Entrez le code du livre à chercher: ");
             scanf("%d", &code);
             Chercher_Livre(Disponible, En_Reparation, code) ? printf("Livre trouvé.\n") : printf("Livre non trouvé.\n");
+             printf("Press Any To Continue.....");
+            getch();
+            return book_management() ;
             break;
         case 5:
             printf("Entrez le code du livre pour modifier l'année de publication: ");
             scanf("%d", &code);
             Modifier_Annee_publication(&Disponible, &En_Reparation, code);
+             printf("Press Any To Continue.....");
+            getch();
+            return book_management() ;
             break;
         case 6:
             printf("Entrez le code du livre pour modifier le titre: ");
             scanf("%d", &code);
             Modifier_Titre(&Disponible, &En_Reparation, code);
+             printf("Press Any To Continue.....");
+            getch();
+            return book_management() ;
             break;
         case 7:
             printf("Entrez le code du livre pour modifier l'auteur: ");
