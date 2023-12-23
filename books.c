@@ -95,15 +95,21 @@ void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *En_Reparat
     fclose(file);
 }
 //tir flaynnnnn 
-void Supprimer_Livre(Liste_Livre *l, int x) {
-    Noeud *current = l->tete, *previous = NULL;
-    while (current != NULL && current->valeur.Code != x) {
+
+void Supprimer_Livre(int x) {
+    // Removing the book from the linked list
+  Noeud *current = l->tete, *previous = NULL;
+    while (current != NULL) {
+        printf("Checking book with code: %d\n", current->valeur.Code); // Debug print
+        if (current->valeur.Code == x) {
+            break;
+        }
         previous = current;
         current = current->suivant;
     }
 
     if (current == NULL) {
-        printf("Livre non trouvé.\n");
+        printf("Livre avec code %d non trouvé dans la liste liée.\n", x);
         return;
     }
 
@@ -114,11 +120,13 @@ void Supprimer_Livre(Liste_Livre *l, int x) {
     }
     free(current);
 
-    // Use temp_books.txt for transaction
+    // Updating the file
     FILE *file = fopen("books.txt", "r");
     FILE *tempFile = fopen("temp_books.txt", "w");
     if (file == NULL || tempFile == NULL) {
         printf("Erreur lors de l'ouverture du fichier.\n");
+        if (file) fclose(file);
+        if (tempFile) fclose(tempFile);
         return;
     }
 
@@ -131,11 +139,14 @@ void Supprimer_Livre(Liste_Livre *l, int x) {
 
     fclose(file);
     fclose(tempFile);
-    // Now update books.txt from temp_books.txt
+
+    // Copy data from temp_books.txt back to books.txt
     file = fopen("books.txt", "w");
     tempFile = fopen("temp_books.txt", "r");
     if (file == NULL || tempFile == NULL) {
         printf("Erreur lors de la synchronisation des fichiers.\n");
+        if (file) fclose(file);
+        if (tempFile) fclose(tempFile);
         return;
     }
 
@@ -146,6 +157,8 @@ void Supprimer_Livre(Liste_Livre *l, int x) {
     fclose(file);
     fclose(tempFile);
 }
+
+
 Noeud *chercher_Liste(Liste_Livre l, int code) {
     // First, try finding the book in the in-memory list
     Noeud *current = l.tete;

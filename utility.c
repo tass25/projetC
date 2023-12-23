@@ -348,78 +348,49 @@ int menu_selector(int x, int y1, int y2, char (*items)[100])
 int selector(int x, int y1, int y2, char (*items)[100])
 {
     hidecursor();
-    int s = 1, n = (y2 - y1) / 2 + 1;
+    int displayedItems = (y2 - y1) / 2 + 1; // Number of items that can be displayed at once
+    int totalItems = 10; // Total items in your array (you might need to adjust this based on your actual number of items)
+    int s = 0, topItem = 0;
     char ch;
 
-    for (int i = 1, j = y1+2; i < n; i++) //here we are skipping first element bcz it will be printed after this loop
-    {
-        gotoxy(31, j);
-        printf("%s", items + i); //items can aslo be printed without derefrencing here
-        j += 2;
-    }
-
-    textcolor(3);
-    gotoxy(x, y1);
-    printf("\xDB\xDB\xB2");
-    gotoxy(x + 5, y1);
-    printf("%s", *(items + 0)); //first item is printed here with different color
-
-    int se = y1; //se = vertical axis position for selector to be printed
     while (1)
     {
-        ch = getch();
-        if (ch == 13)
+        // Display the items
+        for (int i = topItem, j = y1; i < totalItems && i < topItem + displayedItems; ++i, j += 2)
         {
-            textcolor(6);
-            // printf("%d", s);
-            return s;
+            textcolor((i == s) ? 3 : 6);
+            gotoxy(x, j);
+            printf("%s", items[i]);
         }
-        ch = getch(); //reason of second getch() is that arrow keys give 2 output to getch() function, and 1st is common for all and second is according to their respective arrows.
 
-        if (ch == 80) //down
+        ch = getch();
+        if (ch == 13) // Enter key
         {
             textcolor(6);
-            gotoxy(x, se);
-            printf("     %s", *(items + s - 1));
-            if (se == y2) //if 'se' is at last element
-            {
-                s = 1;
-                se = y1;
-            }
-            else
-            {
-                s++;
-                se += 2;
-            }
-            textcolor(3);
-            gotoxy(x, se);
-            printf("\xDB\xDB\xB2  %s", *(items + s - 1));
-            // gotoxy(1,1); // for removing the pointer from screen for visual purpose
-            //continue;
+            return s + 1;
         }
-        else if (ch == 72) //up
+
+        ch = getch(); // For arrow keys
+
+        if (ch == 80 && s < totalItems - 1) // Down arrow key
         {
-            textcolor(6);
-            gotoxy(x, se);
-            printf("     %s", *(items + s - 1));
-            if (se == y1)
+            s++;
+            if (s >= topItem + displayedItems)
             {
-                s = n;
-                se = y2;
+                topItem++;
             }
-            else
+        }
+        else if (ch == 72 && s > 0) // Up arrow key
+        {
+            s--;
+            if (s < topItem)
             {
-                s--;
-                se -= 2;
+                topItem--;
             }
-            textcolor(3);
-            gotoxy(x, se);
-            printf("\xDB\xDB\xB2  %s", *(items + s - 1));
-            // gotoxy(1,1); // for removing the pointer from screen for visual purpose
-            //continue;
         }
     }
 }
+
 
 
 

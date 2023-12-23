@@ -17,9 +17,9 @@ void book_management() {
     chargerLivresDepuisFichier(&Disponible, &En_Reparation);
 
     system("cls");
-    box(23, 4, 71, 18);
+    box(23, 4, 71, 26);
     h_line(23, 6, 71);
-    box(23, 23, 71, 2);
+    box(23, 26, 71, 2);
     gotoxy(52, 5);
     printf("Book Management");
     
@@ -36,7 +36,7 @@ void book_management() {
         "10.Quitter",
     };
 
-    gotoxy(25, 24);
+    gotoxy(25, 27);
     printf("Use Up/Down Arrows keys for Navigation.");
 
     int s = selector(26, 8, 20, items);
@@ -64,7 +64,7 @@ system("cls");
         case 3:
             printf("Entrez le code du livre à supprimer: ");
             scanf("%d", &code);
-            Supprimer_Livre(&Disponible, code);
+            Supprimer_Livre(code);
              printf("Press Any To Continue.....");
             getch();
             return book_management() ;
