@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include "abonne.h" // Include your header files for abonne and books
+#include "abonne.h" // Include your header files for abonne and books
 #include "books.h"
 /*
 int main() {
@@ -73,7 +73,7 @@ int main() {
 
     return 0;
 }
-*/
+
 int main() {
     Liste_Livre Disponible,En_Reparation;
     initialiser_liste_Livre(&Disponible);
@@ -165,4 +165,15 @@ int main() {
     return 0;
 }
 
+*/
+
+void main()
+{
+    SetConsoleTitle("LIBRARY MANAGEMENT SYSTEM BY TESNIME");
+    system("cls");
+    system("color 9");
+    splash_s(24, 5, 71, 20);
+    password(30, 15);
+    loader(29, 20, 54);
+}
 

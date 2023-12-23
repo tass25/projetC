@@ -21,8 +21,27 @@ void gotoxy(int x,int y)
 }
 
 void rootMenu() {
-    // Placeholder function for the root menu functionality
-    printf("Welcome to Root Menu\n");
+    system("cls");
+    system("color 6");
+    char ch;
+    box(6, 1, 105, 2);
+    textcolor(3);
+    box(23, 4, 71, 4);
+    gotoxy(33, 5);
+    printf("Current Date     :     ");
+    gotoxy(33, 7);
+    printf("Current Time     :     ");
+    textcolor(6);
+    box(23, 9, 71, 14);
+    h_line(23, 11, 71);
+    h_line(23, 21, 71);
+    gotoxy(47, 2);
+    printf("Welcome To Tesnime's Library");
+    gotoxy(54, 10);
+    printf("Root Menu");
+    char items[4][26] = {"1. Book Management", "2. subscriber Transaction", "3. Settings", "4. Close Application"};
+    gotoxy(25, 22);
+    printf("Use Up/Down Arrows keys for Navigation.");
 }
 
 void userMenu() {
