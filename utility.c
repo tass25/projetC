@@ -13,7 +13,14 @@ char*Tab_Etat[2]={" DISPONIBLE","EN_REPARATION"};
 #define BKSP 8
 #define MAX_PASSWORD_LENGTH 20   // Define maximum password length
 
-
+void hidecursor()
+{
+   HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+   CONSOLE_CURSOR_INFO info;
+   info.dwSize = 100;
+   info.bVisible = FALSE;
+   SetConsoleCursorInfo(consoleHandle, &info);
+}
 void h_line(int x,int y, int l)
 {
     gotoxy(x,y);
@@ -331,6 +338,86 @@ int menu_selector(int x, int y1, int y2, char (*items)[26])
                 //continue;
             }
         }//can be deleted till here.
+    }
+}
+void book_management() {
+    Liste_Livre Disponible, En_Reparation;
+    initialiser_liste_Livre(&Disponible);
+    initialiser_liste_Livre(&En_Reparation);
+    chargerLivresDepuisFichier(&Disponible, &En_Reparation);
+
+    system("cls");
+    box(23, 4, 71, 18);
+    h_line(23, 6, 71);
+    box(23, 23, 71, 2);
+    gotoxy(52, 5);
+    printf("Book Management");
+    
+    char items[9][26] = {
+        "1. Ajouter un livre", 
+        "2. Afficher un livre", 
+        "3. Supprimer un livre",
+        "4. Chercher un livre",
+        "5. Modifier l'année de publication",
+        "6. Modifier le titre",
+        "7. Modifier l'auteur",
+        "8. Afficher les livres par année",
+        "9. Quitter"
+    };
+
+    gotoxy(25, 24);
+    printf("Use Up/Down Arrows keys for Navigation.");
+
+    int s = selector(26, 8, 20, items);
+
+    int code, annee;
+    Livre l;
+
+    switch (s) {
+        case 1: 
+            saisir_livre(&l);
+            Ajouter_Livre_list(&Disponible, l);
+            break;
+        case 2:
+            printf("Entrez le code du livre à afficher: ");
+            scanf("%d", &code);
+            Afficher_Livre(code);
+            break;
+        case 3:
+            printf("Entrez le code du livre à supprimer: ");
+            scanf("%d", &code);
+            Supprimer_Livre(&Disponible, code);
+            break;
+        case 4:
+            printf("Entrez le code du livre à chercher: ");
+            scanf("%d", &code);
+            Chercher_Livre(Disponible, En_Reparation, code) ? printf("Livre trouvé.\n") : printf("Livre non trouvé.\n");
+            break;
+        case 5:
+            printf("Entrez le code du livre pour modifier l'année de publication: ");
+            scanf("%d", &code);
+            Modifier_Annee_publication(&Disponible, &En_Reparation, code);
+            break;
+        case 6:
+            printf("Entrez le code du livre pour modifier le titre: ");
+            scanf("%d", &code);
+            Modifier_Titre(&Disponible, &En_Reparation, code);
+            break;
+        case 7:
+            printf("Entrez le code du livre pour modifier l'auteur: ");
+            scanf("%d", &code);
+            Modifier_Auteur(&Disponible, &En_Reparation, code);
+            break;
+        case 8:
+            printf("Entrez l'année pour afficher les livres: ");
+            scanf("%d", &annee);
+            Afficher_Livres_Par_Annee(Disponible, En_Reparation, annee);
+            break;
+        case 9:
+            printf("Fin du programme.\n");
+            exit(0);
+        default:
+            printf("Choix non valide, veuillez réessayer.\n");
     }
 }
 
