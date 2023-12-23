@@ -64,13 +64,13 @@ void delay(int mseconds);
 void splash_s(int x, int y, int l, int h);
 void box(int a, int c,int l,int h);
 void loader(int x,int y,int z);
-int menu_selector(int x, int y1, int y2, char (*items)[26]);
+int menu_selector(int x, int y1, int y2, char (*items)[100]);
 int validTitle(char *title);
 int validCode(int code);
 int validName(char *name);
 int validYear(int year);
 int validState(int state);
-
+int selector(int x, int y1, int y2, char (*items)[100]);
 
 //void sauvegarderAbonnesDansFichier(Liste_Abonne *LAB);
 //void chargerAbonnesDepuisFichier(Liste_Abonne *LAB);

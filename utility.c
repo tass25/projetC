@@ -144,7 +144,7 @@ void loader(int x,int y,int z)
     }
     gotoxy(x+3,y+3);
 }
-int menu_selector(int x, int y1, int y2, char (*items)[26])
+int menu_selector(int x, int y1, int y2, char (*items)[100])
 {
     hidecursor();
     int s = 1, n = (y2 - y1) / 2 + 1;
@@ -165,7 +165,7 @@ int menu_selector(int x, int y1, int y2, char (*items)[26])
         }
         else
         {
-            da[i]=time_str[i+13];
+            da[i]=time_str[i+50];
         }
     }
     da[12]='\0';
@@ -345,7 +345,81 @@ int menu_selector(int x, int y1, int y2, char (*items)[26])
 
 
 
+int selector(int x, int y1, int y2, char (*items)[100])
+{
+    hidecursor();
+    int s = 1, n = (y2 - y1) / 2 + 1;
+    char ch;
 
+    for (int i = 1, j = y1+2; i < n; i++) //here we are skipping first element bcz it will be printed after this loop
+    {
+        gotoxy(31, j);
+        printf("%s", items + i); //items can aslo be printed without derefrencing here
+        j += 2;
+    }
+
+    textcolor(3);
+    gotoxy(x, y1);
+    printf("\xDB\xDB\xB2");
+    gotoxy(x + 5, y1);
+    printf("%s", *(items + 0)); //first item is printed here with different color
+
+    int se = y1; //se = vertical axis position for selector to be printed
+    while (1)
+    {
+        ch = getch();
+        if (ch == 13)
+        {
+            textcolor(6);
+            // printf("%d", s);
+            return s;
+        }
+        ch = getch(); //reason of second getch() is that arrow keys give 2 output to getch() function, and 1st is common for all and second is according to their respective arrows.
+
+        if (ch == 80) //down
+        {
+            textcolor(6);
+            gotoxy(x, se);
+            printf("     %s", *(items + s - 1));
+            if (se == y2) //if 'se' is at last element
+            {
+                s = 1;
+                se = y1;
+            }
+            else
+            {
+                s++;
+                se += 2;
+            }
+            textcolor(3);
+            gotoxy(x, se);
+            printf("\xDB\xDB\xB2  %s", *(items + s - 1));
+            // gotoxy(1,1); // for removing the pointer from screen for visual purpose
+            //continue;
+        }
+        else if (ch == 72) //up
+        {
+            textcolor(6);
+            gotoxy(x, se);
+            printf("     %s", *(items + s - 1));
+            if (se == y1)
+            {
+                s = n;
+                se = y2;
+            }
+            else
+            {
+                s--;
+                se -= 2;
+            }
+            textcolor(3);
+            gotoxy(x, se);
+            printf("\xDB\xDB\xB2  %s", *(items + s - 1));
+            // gotoxy(1,1); // for removing the pointer from screen for visual purpose
+            //continue;
+        }
+    }
+}
 
 
 

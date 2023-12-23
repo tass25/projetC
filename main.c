@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <conio.h>
+#include <windows.h>
 #include "abonne.h" // Include your header files for abonne and books
 #include "books.h"
 #include "utility.h"
@@ -21,7 +23,7 @@ void book_management() {
     gotoxy(52, 5);
     printf("Book Management");
     
-    char items[9][100] = {
+    char items[10][100] = {
         "1. Ajouter un livre", 
         "2. Afficher un livre", 
         "3. Supprimer un livre",
@@ -30,21 +32,26 @@ void book_management() {
         "6. Modifier le titre",
         "7. Modifier l'auteur",
         "8. Afficher les livres par année",
-        "9. Quitter"
+        "9. retour au menu principale",
+        "10.Quitter",
     };
 
     gotoxy(25, 24);
     printf("Use Up/Down Arrows keys for Navigation.");
 
-    int s = menu_selector(26, 8, 20, items);
+    int s = selector(26, 8, 20, items);
 
     int code, annee;
     Livre l;
-
+system("cls");
     switch (s) {
+          
         case 1: 
             saisir_livre(&l);
             Ajouter_Livre_list(&Disponible, l);
+            printf("Press Any To Continue.....");
+            getch();
+            return book_management() ;
             break;
         case 2:
             printf("Entrez le code du livre à afficher: ");
@@ -82,10 +89,11 @@ void book_management() {
             Afficher_Livres_Par_Annee(Disponible, En_Reparation, annee);
             break;
         case 9:
+             rootMenu();
+        case 10:
             printf("Fin du programme.\n");
             exit(0);
-        default:
-            printf("Choix non valide, veuillez réessayer.\n");
+
     }
 }
 
@@ -117,13 +125,14 @@ void subscriber_management() {
 
     gotoxy(25, 22);
     printf("Use Up/Down Arrows keys for Navigation.");
-    int s = menu_selector(26, 8, 18, items);
+    int s = selector(26, 8, 18, items);
 
     int identifiant, codeLivre;
     Abonne a;
 
     switch (s) {
         case 1:
+          system("cls");
             Saisir_Abonne(&a);
             AjoutAbonne(&listeAbonnes, a);
             break;
@@ -179,7 +188,7 @@ void rootMenu() {
     printf("Welcome To Tesnime's Library");
     gotoxy(54, 10);
     printf("Root Menu");
-    char items[4][26] = {"1. Book Management", "2. subscriber management", "3. Settings", "4. Close Application"};
+    char items[4][100] = {"1. Book Management", "2. subscriber management", "3. Settings", "4. Close Application"};
     gotoxy(25, 22);
     printf("Use Up/Down Arrows keys for Navigation.");
      int s = menu_selector(26, 13, 19, items);
