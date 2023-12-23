@@ -56,21 +56,20 @@ typedef struct {
 } Liste_Abonne;
 
 
-int validDate(int jour, int mois, int annee);
-int validTitle(char *title) ;
-int validCode(int code);// ll code mtaa kol book 
-int validName(char *name);// esm ll author 
-int validYear(int year) ;//year of publishing 
-int validState(int state);//state of livre
-void password();
+void hidecursor();
+void h_line(int x,int y, int l);
+void textcolor(int color);
 void gotoxy(int x,int y);
-void rootMenu();
-void userMenu();
 void delay(int mseconds);
 void splash_s(int x, int y, int l, int h);
-
 void box(int a, int c,int l,int h);
 void loader(int x,int y,int z);
+int menu_selector(int x, int y1, int y2, char (*items)[26]);
+int validTitle(char *title);
+int validCode(int code);
+int validName(char *name);
+int validYear(int year);
+int validState(int state);
 
 
 //void sauvegarderAbonnesDansFichier(Liste_Abonne *LAB);
