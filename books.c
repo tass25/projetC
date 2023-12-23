@@ -292,7 +292,7 @@ void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *En_Reparat
     }
 }
 
-void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *, Liste_Livre *En_Reparation, int code) {
+void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *En_Reparation, int code) {
     // Search for the book in the lists
     Noeud *bookNode = Recherche_livre(*Disponible, *En_Reparation, code);
 
@@ -305,15 +305,15 @@ void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *, Liste_Livre *En_Repa
     if (bookNode != NULL && file != NULL && tempFile != NULL) {
         char newTitle[TAILLE_CHAINE];
         printf("Enter new title: ");
-        scanf("%s", newTitle);  // Get new title from user
+        scanf("%*c"); // Clear buffer
+        fgets(newTitle, TAILLE_CHAINE, stdin); // Read the new title
+        newTitle[strcspn(newTitle, "\n")] = 0; // Remove newline character
 
         // Read from "books.txt" and write to "temp_books.txt"
         while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
-            // Check if the current book is the one to update
             if (tempLivre.Code == code) {
-                strcpy(tempLivre.Titre, newTitle);  // Update the title
+                strcpy(tempLivre.Titre, newTitle); // Update the title
             }
-            // Write the (updated) book information to the temporary file
             fprintf(tempFile, "%d,%s,%s,%d,%d\n", tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, tempLivre.Annee_Publication.annee, tempLivre.Etat);
         }
 
@@ -326,14 +326,14 @@ void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *, Liste_Livre *En_Repa
         tempFile = fopen("temp_books.txt", "r");
         char ch;
         while ((ch = fgetc(tempFile)) != EOF) {
-            fputc(ch, file);  // Copy character by character
+            fputc(ch, file); // Copy character by character
         }
+
         // Close the files after copying
         fclose(file);
         fclose(tempFile);
         printf("Title updated successfully.\n");
     } else {
-        // Error handling if book not found or file operation failed
         printf("Error updating title.\n");
         if (file) fclose(file);
         if (tempFile) fclose(tempFile);
@@ -412,46 +412,30 @@ void remplire_liste_Disponible(Liste_Livre *Disponible, int n) {
     }
 }
 
-void Afficher_Livres_Par_Annee(Liste_Livre Disponible , Liste_Livre En_Reparation, int anne) {
-    Noeud *current;
-    int count;
 
-    // Display available books from the specified year
-    current = Disponible.tete;
-    count = 1;
-    printf("La Liste Des Livres Disponibles Parus A L'Annee %d Est :\n", anne);
-    if (current == NULL) {
-        printf("\t----La Liste Est Vide !!!---\n");
-    } else {
-        while (current != NULL) {
-            if (current->valeur.Annee_Publication.annee == anne) {
-                printf("Le Livre Num /%d/ :\n", count);
-                Afficher_Livre(current->valeur.Code); // Call Afficher_Livre with the book code
-                count++;
-            }
-            current = current->suivant;
-        }
-    }
-    printf("\n");
+void Afficher_Livres_Par_Annee(int anne) {
+    FILE *file = fopen("books.txt", "r");
+    Livre tempLivre;
+    int count = 0;
 
-    // Display books under repair from the specified year
-    current = En_Reparation.tete;
-    count = 1;
-    printf("La Liste Des Livres En Reparation Parus A L'Annee /%d/ Est :\n\n", anne);
-    if (current == NULL) {
-        printf("\t----La Liste Est Vide !!!---\n");
-    } else {
-        while (current != NULL) {
-            if (current->valeur.Annee_Publication.annee == anne) {
-                printf("Le Livre Num /%d/ :\n", count);
-                Afficher_Livre(current->valeur.Code);
-                count++;
-            }
-            current = current->suivant;
+    printf("Livres Parus en %d :\n", anne);
+
+    if (file != NULL) {
+        while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
+            if (tempLivre.Annee_Publication.annee == anne) {
+                printf("Livre %d\n", ++count);
+                printf("\tTitre: %s, Auteur: %s, Code: %d, Etat: %d\n", tempLivre.Titre, tempLivre.Auteur, tempLivre.Code, tempLivre.Etat);            }
         }
+        fclose(file);
+    } else {
+        printf("Erreur lors de l'ouverture de books.txt.\n");
     }
-    printf("\n");
+
+    if (count == 0) {
+        printf("\t----Aucun livre trouvé pour l'année %d----\n", anne);
+    }
 }
+
 
 
 void sauvegarderLivresDansFichier(Liste_Livre *liste) {

@@ -19,6 +19,6 @@ void Modifier_Annee_publication(Liste_Livre *Disponible, Liste_Livre *En_Reparat
 void Modifier_Titre(Liste_Livre *Disponible, Liste_Livre *En_Reparation, int code);
 void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *En_Reparation, int code);
 void remplire_liste_Disponible(Liste_Livre *Disponible, int n);
-void Afficher_Livres_Par_Annee(Liste_Livre Disponible, Liste_Livre En_Reparation, int annee);
+void Afficher_Livres_Par_Annee(int anne);
 void sauvegarderLivresDansFichier(Liste_Livre *liste);
 #endif //PROJET_C_BOOKS_H
