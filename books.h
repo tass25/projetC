@@ -8,8 +8,8 @@
 void initialiser_liste_Livre(Liste_Livre *L);
 void saisir_livre(Livre *L);
 void Ajouter_Livre_list(Liste_Livre *l, Livre L);
+void Supprimer_Livre(int x) ;
 void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *En_Reparation);
-void Supprimer_Livre(int x);
 Noeud *chercher_Liste(Liste_Livre l, int code);
 int chercher_Livre_Dans_Fichier(Livre *L, int code);
 void Afficher_Livre(int code);

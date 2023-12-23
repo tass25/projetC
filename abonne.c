@@ -173,10 +173,26 @@ void Supprimer_Abonne(Liste_Abonne *LAB, int x) {
         printf("L'abonne avec l'identifiant %d n'existe pas.\n", x);
     }
 }
+void Supprimer_Livre_De_Liste(Liste_Livre *l, int x) {
+    Noeud *current = l->tete, *previous = NULL;
+    while (current != NULL && current->valeur.Code != x) {
+        previous = current;
+        current = current->suivant;
+    }
+
+    if (current == NULL) return; // Book not found in the list
+
+    if (previous == NULL) {
+        l->tete = current->suivant;
+    } else {
+        previous->suivant = current->suivant;
+    }
+    free(current);
+}
 
 // Send a book for repair
 void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre *En_Reparation, Abonne *A, int x) {
-    Noeud *book_node = Recherche_livre(*Disponible, *En_Reparation, x); // Correction ici
+    Noeud *book_node = Recherche_livre(*Disponible, *En_Reparation, x); // Search in 'Disponible' list
     if (book_node == NULL) {
         printf("\t----Livre introuvable.---\n");
         return;
@@ -187,17 +203,24 @@ void Envoyer_Livre_Reparation(Liste_Livre *Disponible, Liste_Livre *En_Reparatio
         return;
     }
 
-    // Move the book to 'En_Reparation' and update its state
-    Supprimer_Livre(Disponible, book_node->valeur.Code);
+    // Update the book's state
     book_node->valeur.Etat = EN_REPARATION;
+
+    // Add the updated book to 'En_Reparation' list
     Ajouter_Livre_list(En_Reparation, book_node->valeur);
+
+    // Nullify the pointer if the book is associated with an Abonne
     if (A && A->pointeur == &book_node->valeur) {
         A->pointeur = NULL;
     }
 
-    // Save changes to the files
-   // sauvegarderEtatDesLivres(Disponible, En_Reparation);
+    // Remove the book from 'Disponible' list
+    Supprimer_Livre_De_Liste(Disponible, x);
+
+    // Update the file to reflect the changes
+    Supprimer_Livre(x); // Assuming this updates the file directly
 }
+
 
 void chargerAbonnesDepuisFichier(Liste_Abonne *LAB) {
     FILE *file = fopen("library.txt", "r");

@@ -97,30 +97,6 @@ void chargerLivresDepuisFichier(Liste_Livre *Disponible, Liste_Livre *En_Reparat
 //tir flaynnnnn 
 
 void Supprimer_Livre(int x) {
-    // Removing the book from the linked list
-  Noeud *current = l->tete, *previous = NULL;
-    while (current != NULL) {
-        printf("Checking book with code: %d\n", current->valeur.Code); // Debug print
-        if (current->valeur.Code == x) {
-            break;
-        }
-        previous = current;
-        current = current->suivant;
-    }
-
-    if (current == NULL) {
-        printf("Livre avec code %d non trouvé dans la liste liée.\n", x);
-        return;
-    }
-
-    if (previous == NULL) {
-        l->tete = current->suivant;
-    } else {
-        previous->suivant = current->suivant;
-    }
-    free(current);
-
-    // Updating the file
     FILE *file = fopen("books.txt", "r");
     FILE *tempFile = fopen("temp_books.txt", "w");
     if (file == NULL || tempFile == NULL) {
@@ -130,15 +106,24 @@ void Supprimer_Livre(int x) {
         return;
     }
 
+    int found = 0;
     Livre tempLivre;
     while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
         if (tempLivre.Code != x) {
             fprintf(tempFile, "%d,%s,%s,%d,%d\n", tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, tempLivre.Annee_Publication.annee, tempLivre.Etat);
+        } else {
+            found = 1;
         }
     }
 
     fclose(file);
     fclose(tempFile);
+
+    if (!found) {
+        printf("Livre avec code %d non trouvé dans books.txt.\n", x);
+        remove("temp_books.txt"); // Clean up the temporary file
+        return;
+    }
 
     // Copy data from temp_books.txt back to books.txt
     file = fopen("books.txt", "w");
@@ -156,6 +141,7 @@ void Supprimer_Livre(int x) {
 
     fclose(file);
     fclose(tempFile);
+    remove("temp_books.txt"); // Clean up the temporary file
 }
 
 

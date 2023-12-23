@@ -11,6 +11,7 @@ void Afficher_Abonne(Abonne A);
 void AjoutAbonne(Liste_Abonne *LAB, Abonne A);
 void remplire_liste_Abonne(Liste_Abonne *LAB, int n);
 void Afficher_liste_Abonne(Liste_Abonne LAB);
+void Supprimer_Livre_De_Liste(Liste_Livre *l, int x);
 Noeud1 *Chercher_Abonne(Liste_Abonne LAB, int ident);
 void Modifier_Abonne(Liste_Abonne *LAB, int x);
 void Supprimer_Abonne(Liste_Abonne *LAB, int x);
