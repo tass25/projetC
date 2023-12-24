@@ -163,75 +163,77 @@ system("cls");
 
 
 void abonne_management() {
-    Liste_Abonne LAB;
-    initialiser_liste_abonne(&LAB);
-    chargerAbonnesDepuisFichier(&LAB);
+    Liste_Abonne listeAbonnes;
+    initialiser_liste_abonne(&listeAbonnes);
+    chargerAbonnesDepuisFichier(&listeAbonnes);
 
     system("cls");
     box(23, 4, 71, 26);
     h_line(23, 6, 71);
     box(23, 26, 71, 2);
     gotoxy(52, 5);
-    printf("Subscriber Management");
+    printf("Gestion des Abonnés");
 
-    char items[7][100] = {
+    char items[10][100] = {
         "1. Ajouter un abonné",
-        "2. Afficher un abonné",
-        "3. Afficher tous les abonnés",
-        "4. Modifier un abonné",
-        "5. Supprimer un abonné",
-        "6. Retour au menu principal",
-        "7. Quitter",
+        "2. Afficher les abonnés",
+        "3. Modifier un abonné",
+        "4. Supprimer un abonné",
+        "5. Retour au menu principal",
+        "6. Quitter"
     };
 
     gotoxy(25, 27);
-    printf("Use Up/Down Arrows keys for Navigation.");
+    printf("Utilisez les flèches Haut/Bas pour la navigation.");
 
-    int s = selector(26, 8, 20, items);
-
-    int ident;
+    int choix;
+    int identifiant, codeLivre;
     Abonne abonne;
+
+    choix = selector(26, 8, 20, items);
+
     system("cls");
-    switch (s) {
+    switch (choix) {
         case 1:
             Saisir_Abonne(&abonne);
-            AjoutAbonne(&LAB, abonne);
+            AjoutAbonne(&listeAbonnes, abonne);
+             printf("Press Any To Continue.....");
+            getch();
+            return abonne_management() ;
             break;
         case 2:
-            printf("Entrez l'identifiant de l'abonné à afficher: ");
-            scanf("%d", &ident);
-            Noeud1* found = Chercher_Abonne(LAB, ident);
-            if (found) Afficher_Abonne(found->abonne); // Adjust according to your structure
-            else printf("Abonné non trouvé.\n");
+            Afficher_liste_Abonne(listeAbonnes);
+             printf("Press Any To Continue.....");
+            getch();
+            return abonne_management() ;
             break;
         case 3:
-            Afficher_liste_Abonne(LAB);
+            printf("Entrez l'identifiant de l'abonné à modifier: ");
+            scanf("%d", &identifiant);
+            Modifier_Abonne(&listeAbonnes, identifiant);
+             printf("Press Any To Continue.....");
+            getch();
+            return abonne_management() ;
             break;
         case 4:
-            printf("Entrez l'identifiant de l'abonné à modifier: ");
-            scanf("%d", &ident);
-            Modifier_Abonne(&LAB, ident);
-            break;
-        case 5:
             printf("Entrez l'identifiant de l'abonné à supprimer: ");
-            scanf("%d", &ident);
-            Supprimer_Abonne(&LAB, ident);
+            scanf("%d", &identifiant);
+            Supprimer_Abonne(&listeAbonnes, identifiant);
+            break;
+             printf("Press Any To Continue.....");
+            getch();
+            return abonne_management() ;
+            case 5 :
+            rootMenu();
             break;
         case 6:
-            rootMenu(); // Assuming this function exists for returning to the main menu
-            break;
-        case 7:
             printf("Fin du programme.\n");
             exit(0);
+            break;
+
     }
 
-    printf("Press Any Key to Continue.....");
-    getch();
-    abonne_management(); // Recursive call to return to the menu
 }
-
-
-
 
 
 void userMenu() {
