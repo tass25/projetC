@@ -1,3 +1,4 @@
+20,toooo
 10,jj
-10,jj
-10,jj
+1010,tesnime
+30,joujou

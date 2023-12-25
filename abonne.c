@@ -89,16 +89,10 @@ void AjoutAbonne(Liste_Abonne *LAB, Abonne A) {
     nouveau->suivant = LAB->tete1;
     LAB->tete1 = nouveau;
 
-    // Update the file
-    FILE *file = fopen("library.txt", "a");
-    if (file == NULL) {
-        perror("Erreur lors de l'ouverture du fichier");
-        free(nouveau);
-        return;
-    }
-    fprintf(file, "%d,%s\n", A.id, A.Nom);
-    fclose(file);
+    // Update the file using sauvegarderAbonnesDansFichier to maintain consistency
+    sauvegarderAbonnesDansFichier(LAB);
 }
+
 // Fill the subscriber list with 'n' new subscribers
 void remplire_liste_Abonne(Liste_Abonne *LAB, int n) {
     Abonne A;

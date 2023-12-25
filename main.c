@@ -9,6 +9,7 @@
 #define ENTER 13
 #define BKSP 8
 void rootMenu() ;
+void userMenu() ;
 
 
 void reset()
@@ -47,6 +48,35 @@ void settings()
         break;
     case 2:
         rootMenu();
+        break;
+    case 3:
+        exit(0);
+        break;
+    }
+}
+void settings2()
+{
+    system("cls");
+    box(23, 4, 71, 18);
+    h_line(23, 6, 71);
+    box(23, 23, 71, 2);
+    gotoxy(50, 5);
+    printf("Settings");
+
+    char items[3][100] = {"1. Reset", "2. Goto user Memu", "3. Close Application"};
+
+    gotoxy(25, 24);
+    printf("Use Up/Down Arrows keys for Navigation.");
+
+    int s = selector(26, 8, 12, items);
+
+    switch (s)
+    {
+    case 1:
+        reset();
+        break;
+    case 2:
+        userMenu();
         break;
     case 3:
         exit(0);
@@ -219,10 +249,10 @@ void abonne_management() {
             printf("Entrez l'identifiant de l'abonné à supprimer: ");
             scanf("%d", &identifiant);
             Supprimer_Abonne(&listeAbonnes, identifiant);
-            break;
              printf("Press Any To Continue.....");
             getch();
             return abonne_management() ;
+            break;
             case 5 :
             rootMenu();
             break;
@@ -236,10 +266,113 @@ void abonne_management() {
 }
 
 
-void userMenu() {
-    // Placeholder function for the user menu functionality
-    printf("Welcome to User Menu\n");
+void book_management2() {
+    Liste_Livre Disponible, En_Reparation;
+    initialiser_liste_Livre(&Disponible);
+    initialiser_liste_Livre(&En_Reparation);
+    chargerLivresDepuisFichier(&Disponible, &En_Reparation);
+
+    system("cls");
+    box(23, 4, 71, 26);
+    h_line(23, 6, 71);
+    box(23, 26, 71, 2);
+    gotoxy(52, 5);
+    printf("Book Management");
+    
+    char items[5][100] = {
+        
+        "1. Afficher un livre", 
+        "2. Chercher un livre",
+        "3. Afficher les livres par année",
+        "4. retour au menu principale",
+        
+        "5.Quitter",
+    };
+
+    gotoxy(25, 27);
+    printf("Use Up/Down Arrows keys for Navigation.");
+
+    int s = selector(26, 8, 20, items);
+
+    int code, annee;
+    Livre l;
+system("cls");
+    switch (s) {
+          
+        case 1: 
+            printf("Entrez le code du livre à afficher: ");
+            scanf("%d", &code);
+            Afficher_Livre(code);
+            printf("Press Any To Continue.....");
+            getch();
+            return book_management2() ;
+            break;
+   
+        case 2:
+            printf("Entrez le code du livre à chercher: ");
+            scanf("%d", &code);
+            Chercher_Livre(Disponible, En_Reparation, code) ? printf("Livre trouvé.\n") : printf("Livre non trouvé.\n");
+            printf("Press Any To Continue.....");
+            getch();
+            return book_management2() ;
+            break;
+        case 3: 
+            printf("Entrez l'année pour afficher les livres: ");
+            scanf("%d", &annee);
+            Afficher_Livres_Par_Annee(annee);
+            printf("Press Any To Continue.....");
+            getch();
+            return book_management2() ;
+            break;
+        case 4:
+            printf("retour au menu de user.\n");
+             userMenu();
+        default:
+            printf("Fin du programme.\n");
+            exit(0);
+
+    }
 }
+
+
+
+void userMenu() {
+      system("cls");
+    system("color 6");
+    char ch;
+    box(6, 1, 105, 2);
+    textcolor(3);
+    box(23, 4, 71, 4);
+    gotoxy(33, 5);
+    printf("Current Date     :     ");
+    gotoxy(33, 7);
+    printf("Current Time     :     ");
+    textcolor(6);
+    box(23, 9, 71, 14);
+    h_line(23, 11, 71);
+    h_line(23, 21, 71);
+    gotoxy(47, 2);
+    printf("Welcome To Tesnime's Library");
+    gotoxy(54, 10);
+    printf("user Menu");
+    char items[3][100] = {"1. Book Management",  "2. Settings", "3. Close Application"};
+    gotoxy(25, 22);
+    printf("Use Up/Down Arrows keys for Navigation.");
+     int s = menu_selector(26, 13, 19, items);
+    switch (s)
+    {
+    case 1:
+        return book_management2();
+        break;
+    case 2:
+        return settings2();
+        break;
+    case 3:
+        getch();
+        break;
+    }
+}
+
 
 void rootMenu() {
     system("cls");
