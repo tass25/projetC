@@ -5,6 +5,7 @@
 #include <windows.h>
 #include "abonne.h" // Include your header files for abonne and books
 #include "books.h"
+#include "suggestions.h"
 #include "utility.h"
 #define ENTER 13
 #define BKSP 8
@@ -96,7 +97,7 @@ void book_management() {
     gotoxy(52, 5);
     printf("Book Management");
     
-    char items[10][100] = {
+    char items[12][100] = {
         "1. Ajouter un livre", 
         "2. Afficher un livre", 
         "3. Supprimer un livre",
@@ -105,8 +106,9 @@ void book_management() {
         "6. Modifier le titre",
         "7. Modifier l'auteur",
         "8. Afficher les livres par année",
-        "9. retour au menu principale",
-        "10.Quitter",
+        "9.afficher tous les suggestions ",
+        "10.retour au menu principale",
+        "11.Quitter",
     };
 
     gotoxy(25, 27);
@@ -182,9 +184,16 @@ system("cls");
             getch();
             return book_management() ;
             break;
-        case 9:
-             rootMenu();
+        case 9 :
+            printf("Displaying all suggestions:\n");
+            displaySuggestions();
+            printf("Press Any To Continue.....");
+            getch();
+            return book_management() ;
+            break;
         case 10:
+             rootMenu();
+        case 11:
             printf("Fin du programme.\n");
             exit(0);
 
@@ -279,21 +288,21 @@ void book_management2() {
     gotoxy(52, 5);
     printf("Book Management");
     
-    char items[5][100] = {
+    char items[6][100] = {
         
         "1. Afficher un livre", 
         "2. Chercher un livre",
         "3. Afficher les livres par année",
-        "4. retour au menu principale",
-        
-        "5.Quitter",
+        "4. Ajouter une suggestion",  
+        "5. retour au menu principale",
+        "6.Quitter"
     };
 
     gotoxy(25, 27);
     printf("Use Up/Down Arrows keys for Navigation.");
 
     int s = selector(26, 8, 20, items);
-
+    char suggestion[100];
     int code, annee;
     Livre l;
 system("cls");
@@ -323,10 +332,20 @@ system("cls");
             printf("Press Any To Continue.....");
             getch();
             return book_management2() ;
-            break;
+            break; 
         case 4:
+            printf("Enter your suggestion: ");
+            scanf("%s", suggestion);
+            countAddSaveSuggestion(suggestion);
+            printf("Press Any To Continue.....");
+            getch();
+            return book_management2() ;
+            break; 
+       case 5 :
             printf("retour au menu de user.\n");
-             userMenu();
+            printf("Press Any To Continue.....");
+            getch();
+            userMenu();
         default:
             printf("Fin du programme.\n");
             exit(0);
