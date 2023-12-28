@@ -151,14 +151,14 @@ void Modifier_Abonne(Liste_Abonne *LAB, int x) {    // Recherche l'abonné avec 
 }
 
 // Remove a subscriber from the list
-void Supprimer_Abonne(Liste_Abonne *LAB, int x) {
+void Supprimer_Abonne(Liste_Abonne *LAB, int x) {    // 'current' pour parcourir la liste, 'previous' pour garder trace du nœud précédent.
     Noeud1 *current = LAB->tete1, *previous = NULL;
-    while (current != NULL && current->AB.id != x) {
+    while (current != NULL && current->AB.id != x) {    // Parcours la liste jusqu'à trouver l'abonné ou atteindre la fin de la liste.
         previous = current;
         current = current->suivant;
-    }
-    if (current != NULL) {
-        if (previous == NULL) {
+    }    // Vérifie si l'abonné a été trouvé.
+    if (current != NULL) {// Si trouvé, le retire de la liste.
+        if (previous == NULL) {// Cas où l'abonné est en tête de liste.
             LAB->tete1 = current->suivant;
         } else {
             previous->suivant = current->suivant;
@@ -170,15 +170,15 @@ void Supprimer_Abonne(Liste_Abonne *LAB, int x) {
     }
 }
 void Supprimer_Livre_De_Liste(Liste_Livre *l, int x) {
-    Noeud *current = l->tete, *previous = NULL;
-    while (current != NULL && current->valeur.Code != x) {
+    Noeud *current = l->tete, *previous = NULL;    // 'current' pour parcourir la liste, 'previous' pour le nœud précédent.
+    while (current != NULL && current->valeur.Code != x) {    // Cherche le livre avec le code 'x' dans la liste.
         previous = current;
         current = current->suivant;
     }
 
     if (current == NULL) return; // Book not found in the list
 
-    if (previous == NULL) {
+    if (previous == NULL) {// Si le livre est en tête de liste.
         l->tete = current->suivant;
     } else {
         previous->suivant = current->suivant;
