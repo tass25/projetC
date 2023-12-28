@@ -14,13 +14,13 @@ void saisir_livre(Livre *L) {
         scanf("%s", L->Titre);
     }
 
-    int inputStatus;
+    int status;
     printf("Saisir son code:\n");
-    inputStatus = scanf("%d", &L->Code);
-    while (!validCode(L->Code) || inputStatus != 1) {
+    status = scanf("%d", &L->Code);
+    while (!validCode(L->Code) || status != 1) {
         while(getchar() != '\n'); // Clear the input buffer
         printf("Code invalide ou déjà existant. Réessayez:\n");
-        inputStatus = scanf("%d", &L->Code);
+        status= scanf("%d", &L->Code);
     }
 
     printf("Saisir le nom de son auteur:\n");
@@ -39,7 +39,7 @@ void saisir_livre(Livre *L) {
         inp = scanf("%d", &L->Annee_Publication.annee);
     }
 
-    printf("Donnez l'etat (0: , 1: DISPONIBLE, 2: EN_REPARATION):\n");
+    printf("Donnez l'etat ( 1: DISPONIBLE, 2: EN_REPARATION):\n");
     scanf("%d", &L->Etat);
     while (!validState(L->Etat)) {
         printf("État invalide. Réessayez:\n");
@@ -55,9 +55,7 @@ void saisir_livre(Livre *L) {
     }
 }
 
-
-//another function , another doumou3 , ekhtiyaraty mdamara hayaty :) 
-
+//another function , another doumou3 
 void Ajouter_Livre_list(Liste_Livre *l, Livre L) {
     Noeud *nouveau = (Noeud *)malloc(sizeof(Noeud));
     nouveau->valeur = L;
@@ -101,15 +99,15 @@ void Supprimer_Livre(int x) {
     FILE *tempFile = fopen("temp_books.txt", "w");
     if (file == NULL || tempFile == NULL) {
         printf("Erreur lors de l'ouverture du fichier.\n");
-        if (file) fclose(file);
+        if (file) fclose(file);//close if it was opened
         if (tempFile) fclose(tempFile);
         return;
     }
 
     int found = 0;
-    Livre tempLivre;
+    Livre tempLivre; // Temporary structure to store book data.
     while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
-        if (tempLivre.Code != x) {
+        if (tempLivre.Code != x) {        // If the current book's code doesn't match 'x', write it to 'temp_books.txt'.
             fprintf(tempFile, "%d,%s,%s,%d,%d\n", tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, tempLivre.Annee_Publication.annee, tempLivre.Etat);
         } else {
             found = 1;
@@ -164,9 +162,10 @@ Noeud *chercher_Liste(Liste_Livre l, int code) {
 
     Livre tempLivre;
     while (fscanf(file, "%d,%[^,],%[^,],%d,%d\n", &tempLivre.Code, tempLivre.Titre, tempLivre.Auteur, &tempLivre.Annee_Publication.annee, &tempLivre.Etat) == 5) {
+        // Check if the read book's code matches the search code.
         if (tempLivre.Code == code) {
             fclose(file);
-            Noeud *newNode = malloc(sizeof(Noeud));
+            Noeud *newNode = malloc(sizeof(Noeud));  // Create a new node and copy the book's details into it.
             newNode->valeur = tempLivre;
             newNode->suivant = NULL;
             return newNode;  // Return a new node with the book details
@@ -453,100 +452,6 @@ void sauvegarderLivresDansFichier(Liste_Livre *liste) {
 
     fclose(file);
 }
-/*int main() {
-    Liste_Livre Disponible, , En_Reparation;
-    initialiser_liste_Livre(&Disponible);
-    initialiser_liste_Livre(&);
-    initialiser_liste_Livre(&En_Reparation);
-
-    // Load books from file into the lists at the start
-    chargerLivresDepuisFichier(&Disponible, &, &En_Reparation);
-
-    int choix, code;
-
-    while (1) {
-        printf("\nMenu de Gestion de Bibliothèque\n");
-        printf("1. Ajouter un livre\n");
-        printf("2. Afficher un livre\n");
-        printf("3. Supprimer un livre\n");
-        printf("4. Chercher un livre\n");
-        printf("5. Modifier l'année de publication\n");
-        printf("6. Modifier le titre\n");
-        printf("7. Modifier l'auteur\n");
-        printf("8. Afficher les livres par année\n");
-        printf("9. Quitter\n");
-        printf("Entrez votre choix: ");
-        scanf("%d", &choix);
-
-        switch (choix) {
-            case 1: {
-                Livre l;
-                saisir_livre(&l);
-                Ajouter_Livre_list(&Disponible, l); // Assuming new books are always available
-                break;
-            }
-            case 2: {
-                printf("Entrez le code du livre à afficher: ");
-                scanf("%d", &code);
-                Afficher_Livre(code);
-                break;
-            }
-            case 3: {
-                printf("Entrez le code du livre à supprimer: ");
-                scanf("%d", &code);
-                Supprimer_Livre(&Disponible, code); // Assuming the book is in the available list
-                break;
-            }
-            case 4: {
-                printf("Entrez le code du livre à chercher: ");
-                scanf("%d", &code);
-                if (Chercher_Livre(Disponible, , En_Reparation, code)) {
-                    printf("Livre trouvé.\n");
-                } else {
-                    printf("Livre non trouvé.\n");
-                }
-                break;
-            }
-            case 5: {
-                printf("Entrez le code du livre pour modifier l'année de publication: ");
-                scanf("%d", &code);
-                Modifier_Annee_publication(&Disponible, &, &En_Reparation, code);
-                break;
-            }
-            case 6: {
-                printf("Entrez le code du livre pour modifier le titre: ");
-                scanf("%d", &code);
-                Modifier_Titre(&Disponible, &, &En_Reparation, code);
-                break;
-            }
-            case 7: {
-                printf("Entrez le code du livre pour modifier l'auteur: ");
-                scanf("%d", &code);
-                Modifier_Auteur(&Disponible, &, &En_Reparation, code);
-                break;
-            }
-            case 8: {
-                int annee;
-                printf("Entrez l'année pour afficher les livres: ");
-                scanf("%d", &annee);
-                Afficher_Livres_Par_Annee(Disponible, , En_Reparation, annee);
-                break;
-            }
-            case 9: {
-                printf("Fin du programme.\n");
-                return 0;
-            }
-            default:
-                printf("Choix non valide, veuillez réessayer.\n");
-        }
-    }
-
-    return 0;
-}
-*/
-
-
-
 
 
 //fseek : important 
