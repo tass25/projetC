@@ -224,8 +224,9 @@ void chargerAbonnesDepuisFichier(Liste_Abonne *LAB) {
         perror("Erreur lors de l'ouverture du fichier");
         return;
     }
-
+    // Temporary variable to hold subscriber data.
     Abonne temp;
+        // Reads subscriber data from the file.
     while (fscanf(file, "%d,%29s", &temp.id, temp.Nom) == 2) {
         temp.pointeur = NULL; // Assuming no borrowed book info is stored
         if (!idExisteDeja(LAB, temp.id)) { // Ajoute uniquement si l'ID n'existe pas déjà
