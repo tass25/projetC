@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "books.h"
+// Initialise une liste d'abonnés en mettant la tête de la liste à NULL.
 void initialiser_liste_abonne(Liste_Abonne*LAB)
 {LAB->tete1=NULL;
 }
+// Vérifie si un identifiant existe déjà dans la liste d'abonnés.
 int idExisteDeja(Liste_Abonne *LAB, int id) {
     Noeud1 *current = LAB->tete1;
     while (current != NULL) {
@@ -15,7 +17,7 @@ int idExisteDeja(Liste_Abonne *LAB, int id) {
     }
     return 0; // ID non trouvé
 }
-
+// Saisit les informations d'un abonné depuis l'entrée standard.
 void Saisir_Abonne(Abonne *A) {
     char tempName[TAILLE_CHAINE];
 
@@ -37,21 +39,19 @@ void Saisir_Abonne(Abonne *A) {
 
     A->pointeur = NULL;  // Initialize the pointer to NULL
 }
-
-
-// Save the current state of subscribers into library.txt
+//la fonction  prend un pointeur vers une 'Liste_Abonne'.
 void sauvegarderAbonnesDansFichier(Liste_Abonne *LAB) {
     FILE *file = fopen("library.txt", "w");
-    if (file == NULL) {
+    if (file == NULL) {    // Vérifie si l'ouverture du fichier a échoué. Si oui, affiche une erreur et sort de la fonction.
         perror("Erreur lors de l'écriture du fichier");
         return;
-    }
+    }    // Initialise 'current' au début de la liste d'abonnés pour parcourir la liste.
     Noeud1 *current = LAB->tete1;
     while (current != NULL) {
         if (fprintf(file, "%d,%s\n", current->AB.id, current->AB.Nom) < 0) {
             perror("Erreur lors de l'écriture dans le fichier");
             break;
-        }
+        }  // Passe à l'abonné suivant dans la liste.
         current = current->suivant;
     }
     fclose(file);
@@ -81,12 +81,12 @@ void AjoutAbonne(Liste_Abonne *LAB, Abonne A) {
 
     // Proceed with adding the new subscriber
     Noeud1 *nouveau = malloc(sizeof(Noeud1));
-    if (!nouveau) {
+    if (!nouveau) {    // Vérifie si l'allocation de mémoire a échoué. Si oui, affiche une erreur et sort de la fonction.
         perror("Erreur d'allocation mémoire");
         return;
-    }
+    }    // Affecte les données de l'abonné au nouveau noeud.
     nouveau->AB = A;
-    nouveau->suivant = LAB->tete1;
+    nouveau->suivant = LAB->tete1;    // Insère le nouveau noeud au début de la liste.
     LAB->tete1 = nouveau;
 
     // Update the file using sauvegarderAbonnesDansFichier to maintain consistency
@@ -103,7 +103,7 @@ void remplire_liste_Abonne(Liste_Abonne *LAB, int n) {
             printf("Saisie de l'Abonne /%d/\n", i + 1);
             Saisir_Abonne( &A);
 
-            // Check if the ID already exists
+            // Vérifie si l'identifiant existe déjà dans la liste d'abonnés.
             idAlreadyExists = idExisteDeja(LAB, A.id);
             if (idAlreadyExists) {
                 printf("Un abonne avec l'identifiant %d existe deja. Veuillez saisir à nouveau.\n", A.id);
@@ -129,16 +129,18 @@ void Afficher_liste_Abonne(Liste_Abonne LAB) {
 
 // Search for a subscriber in the list
 Noeud1 *Chercher_Abonne(Liste_Abonne LAB, int ident) {
+        // Initialise un pointeur 'i' au début de la liste des abonnés.
     Noeud1 *i = LAB.tete1;
-    while (i != NULL && i->AB.id != ident) {
+    while (i != NULL && i->AB.id != ident) {    // Boucle tant que 'i' n'est pas NULL et que l'identifiant de l'abonné courant n'est pas égal à 'ident'.
         i = i->suivant;
     }
     return i; // Returns NULL if not found
 }
 
 // Modify a subscriber's data
-void Modifier_Abonne(Liste_Abonne *LAB, int x) {
+void Modifier_Abonne(Liste_Abonne *LAB, int x) {    // Recherche l'abonné avec l'identifiant 'x' dans la liste 'LAB' et stocke le résultat dans 'i'.
     Noeud1 *i = Chercher_Abonne(*LAB, x);
+        // Vérifie si l'abonné a été trouvé.
     if (i != NULL) {
         printf("Donner le Nouveau Nom de Votre Abonne :\n ");
         scanf("%s", i->AB.Nom);
