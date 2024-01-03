@@ -62,11 +62,7 @@ void Afficher_Abonne(Abonne A) {
     printf("\t \t____________________________\n");
     printf("\t\tLE NOM :%s\n", A.Nom);
     printf("\t\tL'IDENTIFIANT :%d\n", A.id);
-    if (A.pointeur == NULL)
-        printf("\t\t\t** Aucun Livre Emprunter **\n");
-    else
-        printf("\t\t\t** Il a un Livre Emprunte **\n");
-    printf("\t\t____________________________\n");
+ 
 }
 
 // Add a subscriber to the list

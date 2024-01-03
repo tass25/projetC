@@ -1,5 +1,4 @@
-book1,2    
-book2,2    
-book4,1
-book,1
-saila,2    
+History,5
+WWII Chronicles,2
+Science Fiction Odyssey,8
+Romance Under the Stars,3
