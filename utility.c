@@ -465,9 +465,3 @@ int validState(int state) {
     return 0; 
 }
 
-
-
-
-//mazel user menu w root menu 
-//etude de cas(contextuealisation ) 
-//les fonctionalités
