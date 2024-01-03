@@ -92,7 +92,7 @@ void splash_s(int x, int y, int l, int h)
         printf("%c", a[i]);
         delay(8);
     }
-    char b[27] = "tayyyyyyyyyyyyyyyyyyyyyy";
+    char b[27] = "WELCOME TO THE WORLD OF MAGIC";
     gotoxy(47, 11);
     for (int i = 0; i < 26; i++)
     {
