@@ -17,8 +17,6 @@ void reset()
 {
     system("cls");
     box(30,7,50,7);
-    remove("data.dat");
-    remove("issue.dat");
     gotoxy(36,10);
     printf("Reset Successful");
     gotoxy(36,12);

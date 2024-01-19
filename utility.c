@@ -85,14 +85,14 @@ void splash_s(int x, int y, int l, int h)
         printf("\xDB");
         delay(3);
     }
-    char a[11] = "Welcome to";
+    char a[11] = "WELCOME TO";
     gotoxy(55, 9);
     for (int i = 0; i < 10; i++)
     {
         printf("%c", a[i]);
         delay(8);
     }
-    char b[27] = "WELCOME TO THE WORLD OF MAGIC";
+    char b[30] = "WORLD OF MAGIC";
     gotoxy(47, 11);
     for (int i = 0; i < 26; i++)
     {

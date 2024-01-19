@@ -392,9 +392,6 @@ void Modifier_Auteur(Liste_Livre *Disponible, Liste_Livre *En_Reparation, int co
 void remplire_liste_Disponible(Liste_Livre *Disponible, int n) {
     int i;
     Livre L;
-
-    // No need to set Disponible->tete = NULL here to preserve existing list contents
-
     for (i = 0; i < n; i++) {
         printf(" Saisie du Livre /%d/\n", i + 1);
 
